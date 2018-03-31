@@ -13,7 +13,7 @@ public class Composite extends Function {
 
     @Override
     Function derivative() {
-        return null;
+        return new Product(inner.derivative(), new Composite(outer.derivative(), inner));
     }
 
     @Override
