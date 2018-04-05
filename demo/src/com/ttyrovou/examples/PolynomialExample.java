@@ -1,7 +1,7 @@
-package com.ttyrovou.Math.examples;
+package com.ttyrovou.examples;
 
 import com.ttyrovou.Math.Functions.Polynomial;
-import com.ttyrovou.Numbers.Complex;
+import com.ttyrovou.Math.Numbers.Complex;
 
 public class PolynomialExample {
     public static void main(String[] args) {

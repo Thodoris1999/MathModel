@@ -1,6 +1,6 @@
-package com.ttyrovou.Numbers;
+package com.ttyrovou.Math.Numbers;
 
-import com.ttyrovou.Utils.NumberUtils;
+import com.ttyrovou.Math.Utils.NumberUtils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

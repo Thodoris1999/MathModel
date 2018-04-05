@@ -1,4 +1,4 @@
-package com.ttyrovou.Utils;
+package com.ttyrovou.Math.Utils;
 
 import java.math.BigInteger;
 

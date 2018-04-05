@@ -1,4 +1,4 @@
-package com.ttyrovou.Numbers;
+package com.ttyrovou.Math.Numbers;
 
 public class Complex {
     public static final Complex ONE = new Complex(Fraction.ONE, Fraction.ZERO);

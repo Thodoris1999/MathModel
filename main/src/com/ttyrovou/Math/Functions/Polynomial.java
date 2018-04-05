@@ -1,7 +1,7 @@
 package com.ttyrovou.Math.Functions;
 
-import com.ttyrovou.Numbers.Complex;
-import com.ttyrovou.Numbers.Fraction;
+import com.ttyrovou.Math.Numbers.Complex;
+import com.ttyrovou.Math.Numbers.Fraction;
 
 public class Polynomial extends Function{
 

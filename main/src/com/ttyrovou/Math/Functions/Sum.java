@@ -1,6 +1,6 @@
 package com.ttyrovou.Math.Functions;
 
-import com.ttyrovou.Numbers.Complex;
+import com.ttyrovou.Math.Numbers.Complex;
 
 public class Sum extends Function {
 
