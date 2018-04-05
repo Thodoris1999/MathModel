@@ -1,4 +1,4 @@
-package com.ttyrovou.Functions;
+package com.ttyrovou.Math.Functions;
 
 import com.ttyrovou.Numbers.Complex;
 
@@ -12,17 +12,17 @@ public class Composite extends Function {
     }
 
     @Override
-    Function derivative() {
+    public Function derivative() {
         return new Product(inner.derivative(), new Composite(outer.derivative(), inner));
     }
 
     @Override
-    Function indefiniteIntegral() {
+    public Function indefiniteIntegral() {
         return null;
     }
 
     @Override
-    Complex eval(Complex num) {
+    public Complex eval(Complex num) {
         return outer.eval(inner.eval(num));
     }
 }

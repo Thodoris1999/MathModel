@@ -1,4 +1,4 @@
-package com.ttyrovou.Functions;
+package com.ttyrovou.Math.Functions;
 
 import com.ttyrovou.Numbers.Complex;
 
@@ -12,17 +12,22 @@ public class Product extends Function {
     }
 
     @Override
-    Function derivative() {
+    public Function derivative() {
         return new Sum(new Product(factor1.derivative(), factor2), new Product(factor1, factor2.derivative()));
     }
 
     @Override
-    Function indefiniteIntegral() {
+    public Function indefiniteIntegral() {
         return null;
     }
 
     @Override
-    Complex eval(Complex num) {
+    public Complex eval(Complex num) {
         return factor1.eval(num).multiply(factor2.eval(num));
+    }
+
+    @Override
+    public String toString() {
+        return factor1.toString() + " * " + factor2.toString();
     }
 }

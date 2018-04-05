@@ -1,4 +1,4 @@
-package com.ttyrovou.Functions;
+package com.ttyrovou.Math.Functions;
 
 import com.ttyrovou.Numbers.Complex;
 
@@ -11,17 +11,17 @@ public class Constant extends Function {
     }
 
     @Override
-    Function derivative() {
+    public Function derivative() {
         return new Constant(Complex.ZERO);
     }
 
     @Override
-    Function indefiniteIntegral() {
+    public Function indefiniteIntegral() {
         return new Polynomial(Complex.ZERO, number);
     }
 
     @Override
-    Complex eval(Complex num) {
+    public Complex eval(Complex num) {
         return number;
     }
 

@@ -1,14 +1,14 @@
-package com.ttyrovou.Functions;
+package com.ttyrovou.Math.Functions;
 
 import com.ttyrovou.Numbers.Complex;
 
 public abstract class Function {
 
-    abstract Function derivative();
+    abstract public Function derivative();
 
-    abstract Function indefiniteIntegral();
+    abstract public Function indefiniteIntegral();
 
-    abstract Complex eval(Complex num);
+    abstract public Complex eval(Complex num);
 
     @Override
     public String toString() {
