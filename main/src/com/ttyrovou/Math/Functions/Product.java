@@ -2,13 +2,17 @@ package com.ttyrovou.Math.Functions;
 
 import com.ttyrovou.Math.Numbers.Complex;
 
+import java.util.function.Predicate;
+
 public class Product extends Function {
 
     private Function factor1, factor2;
+    private Predicate<Complex> domain;
 
     public Product(Function factor1, Function factor2) {
         this.factor1 = factor1;
         this.factor2 = factor2;
+        this.domain = factor1.domain.and(factor2.domain);
     }
 
     @Override

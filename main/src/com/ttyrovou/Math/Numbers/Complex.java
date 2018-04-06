@@ -69,8 +69,10 @@ public class Complex {
     }
 
     public Complex multiply(Complex complex){
-        return new Complex(this.getRe().multiply(complex.getRe()).subtract(this.getIm().multiply(complex.getIm())),
-                this.getRe().multiply(complex.getIm()).add(this.getIm().multiply(complex.getRe())));
+        return new Complex(this.getRe().multiply(complex.getRe())
+                .subtract(this.getIm().multiply(complex.getIm())),
+                this.getRe().multiply(complex.getIm())
+                        .add(this.getIm().multiply(complex.getRe())));
     }
 
     public Complex divide(Complex complex){
@@ -91,7 +93,7 @@ public class Complex {
         Complex returnVal = Complex.ONE;
         if (a >= 0) {
             for (int i = 0; i < a; i++) {
-                returnVal.multiply(this);
+                returnVal = returnVal.multiply(this);
             }
             return returnVal;
         } else {

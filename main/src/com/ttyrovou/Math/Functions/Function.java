@@ -2,7 +2,11 @@ package com.ttyrovou.Math.Functions;
 
 import com.ttyrovou.Math.Numbers.Complex;
 
+import java.util.function.Predicate;
+
 public abstract class Function {
+
+    Predicate<Complex> domain;
 
     abstract public Function derivative();
 

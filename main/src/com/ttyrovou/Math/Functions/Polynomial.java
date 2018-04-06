@@ -3,13 +3,17 @@ package com.ttyrovou.Math.Functions;
 import com.ttyrovou.Math.Numbers.Complex;
 import com.ttyrovou.Math.Numbers.Fraction;
 
+import java.util.function.Predicate;
+
 public class Polynomial extends Function{
 
     //index 0 is constant, index one is coefficient of x etc
     private Complex[] coefficients;
+    private Predicate<Complex> domain;
 
     public Polynomial(Complex... coefficients) {
         this.coefficients = coefficients;
+        this.domain = (Complex num) -> true;
     }
 
     @Override
@@ -35,10 +39,13 @@ public class Polynomial extends Function{
 
     @Override
     public Complex eval(Complex num) {
-        Complex sum = Complex.ZERO;
+        if (!domain.test(num)) {
+            return null;
+        }
 
+        Complex sum = Complex.ZERO;
         for (int i = 0; i < coefficients.length; i++) {
-            sum = sum.add(coefficients[i].toThe(i));
+            sum = sum.add(coefficients[i].multiply(num.toThe(i)));
         }
         return sum;
     }

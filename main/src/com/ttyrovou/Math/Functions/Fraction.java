@@ -2,13 +2,19 @@ package com.ttyrovou.Math.Functions;
 
 import com.ttyrovou.Math.Numbers.Complex;
 
+import java.util.function.Predicate;
+
 public class Fraction extends Function {
 
     private Function numerator, denominator;
+    private Predicate<Complex> domain;
 
     public Fraction(Function numerator, Function denominator) {
         this.numerator = numerator;
         this.denominator = denominator;
+        this.domain = numerator.domain
+                .and(denominator.domain)
+                .and((Complex num) -> !denominator.eval(num).equals(Complex.ZERO));
     }
 
     @Override
@@ -25,6 +31,9 @@ public class Fraction extends Function {
 
     @Override
     public Complex eval(Complex num) {
+        if (!domain.test(num)) {
+            return null;
+        }
         return numerator.eval(num).divide(denominator.eval(num));
     }
 
