@@ -20,7 +20,7 @@ public class Polynomial extends Function{
     public Polynomial derivative() {
         Complex[] newCoefficients = new Complex[coefficients.length - 1];
         for (int i = 0; i < newCoefficients.length; i++) {
-            newCoefficients[i] = coefficients[i + 1].multiply(Complex.from(i + 1));
+            newCoefficients[i] = coefficients[i + 1].multiply(Complex.ofInt(i + 1));
         }
 
         return new Polynomial(newCoefficients);
@@ -31,7 +31,7 @@ public class Polynomial extends Function{
         Complex[] newCoefficients = new Complex[coefficients.length + 1];
         newCoefficients[0] = Complex.ZERO;
         for (int i = 1; i < newCoefficients.length; i++) {
-            newCoefficients[i] = coefficients[i - 1].divide(Complex.from(i));
+            newCoefficients[i] = coefficients[i - 1].divide(Complex.ofInt(i));
         }
 
         return new Polynomial(newCoefficients);

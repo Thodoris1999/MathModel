@@ -1,5 +1,7 @@
 package com.ttyrovou.Math.Numbers;
 
+import com.ttyrovou.Math.Utils.NumberFormatMode;
+import com.ttyrovou.Math.Utils.NumberFormatModeBuilder;
 import com.ttyrovou.Math.Utils.NumberUtils;
 
 import java.math.BigDecimal;
@@ -26,7 +28,6 @@ public class Fraction {
         }
         this.a = a;
         this.b = b;
-        BigDecimal dec = new BigDecimal("0.12");
     }
 
     public Fraction(BigInteger a) {
@@ -34,7 +35,7 @@ public class Fraction {
         this.b = BigInteger.ONE;
     }
 
-    public Fraction(String s){
+    public Fraction(String s) {
         Matcher fractionMatcher = fractionPattern.matcher(s);
         Matcher decimalMatcher = decimalPattern.matcher(s);
         if (fractionMatcher.matches()) {
@@ -44,12 +45,9 @@ public class Fraction {
             } else {
                 this.b = BigInteger.ONE;
             }
-        } else if (decimalMatcher.matches()){
-            String[] splited = s.split("\\.");
-            this.a = new BigInteger(s.replace(".", ""));
-            this.b = new BigInteger(Integer.toString((int) Math.pow(10, splited[1].length())));
-            this.a = this.simplified().getA();
-            this.b = this.simplified().getB();
+        } else if (decimalMatcher.matches()) {
+            this.a = Fraction.ofDecimalString(s).getA();
+            this.b = Fraction.ofDecimalString(s).getB();
         } else {
             throw new NumberFormatException("Fraction not formatted properly.");
         }
@@ -57,16 +55,32 @@ public class Fraction {
         if (b.equals(new BigInteger("0"))) {
             throw new ArithmeticException("Fraction cannot have zero as denominator");
         }
-        if(this.a == null || this.b == null){
+        if (this.a == null || this.b == null) {
             throw new NumberFormatException("Fraction not formatted correctly.");
         }
     }
 
-    public static Fraction from(int a) {
+    public static Fraction ofInt(int a) {
         return new Fraction(BigInteger.valueOf(a), BigInteger.ONE);
     }
 
-    public Fraction add(Fraction fraction){
+    public static Fraction ofDouble(double a) {
+        String dec = Double.toString(a);
+        return Fraction.ofDecimalString(dec);
+    }
+
+    private static Fraction ofDecimalString(String dec) {
+        String[] splited = dec.split("\\.");
+        BigInteger numerator = new BigInteger(dec.replace(".", ""));
+        StringBuilder decString = new StringBuilder("1");
+        for (int i = 0; i < splited[1].length(); i++) {
+            decString.append('0');
+        }
+        BigInteger denominator = new BigInteger(decString.toString());
+        return new Fraction(numerator, denominator).simplified();
+    }
+
+    public Fraction add(Fraction fraction) {
         BigInteger ekp = this.getB().multiply(fraction.getB()).divide(NumberUtils.gcd(this.getB(), fraction.getB()));
         Fraction result = new Fraction(this.getA()
                 .multiply(ekp.divide(this.getB()))
@@ -74,17 +88,17 @@ public class Fraction {
         return result.simplified();
     }
 
-    public Fraction subtract(Fraction fraction){
+    public Fraction subtract(Fraction fraction) {
         return this.add(fraction.opposite());
     }
 
-    public Fraction multiply(Fraction fraction){
+    public Fraction multiply(Fraction fraction) {
         Fraction result = new Fraction(this.getA().multiply(fraction.getA()),
                 this.getB().multiply(fraction.getB()));
         return result.simplified();
     }
 
-    public Fraction divide(Fraction fraction){
+    public Fraction divide(Fraction fraction) {
         return this.multiply(fraction.inverse());
     }
 
@@ -93,12 +107,12 @@ public class Fraction {
         return new Fraction(getA().divide(gcd), getB().divide(gcd));
     }
 
-    public Fraction opposite(){
+    public Fraction opposite() {
         return new Fraction(getA().multiply(new BigInteger("-1")), getB());
     }
 
-    public Fraction inverse(){
-        if(a.equals(new BigInteger("0"))){
+    public Fraction inverse() {
+        if (a.equals(new BigInteger("0"))) {
             throw new ArithmeticException("Atttempt to Invert zero");
         }
         return new Fraction(getB(), getA());
@@ -126,7 +140,7 @@ public class Fraction {
 
     @Override
     public String toString() {
-        if(b.equals(new BigInteger("1"))){
+        if (b.equals(new BigInteger("1"))) {
             return a.toString();
         } else {
             return a + "/" + b;
@@ -134,7 +148,7 @@ public class Fraction {
     }
 
     public boolean equals(Fraction fraction) {
-        if(a.equals(new BigInteger("0")) && fraction.getA().equals(new BigInteger("0"))) {
+        if (a.equals(new BigInteger("0")) && fraction.getA().equals(new BigInteger("0"))) {
             return true;
         } else {
             Fraction thisSimplified = this.abs().simplified();
@@ -144,26 +158,43 @@ public class Fraction {
         }
     }
 
-    public String toLatex(boolean decimal) {
-        if(b.equals(new BigInteger("1"))){
+    public String toLatex(NumberFormatMode formatMode) {
+        if (b.equals(new BigInteger("1"))) {
             return a.toString();
-        } else if (a.equals(new BigInteger("0"))){
+        } else if (a.equals(new BigInteger("0"))) {
             return "0";
-        }else{
-            if(decimal){
-                BigDecimal decA = new BigDecimal(a);
-                BigDecimal decB = new BigDecimal(b);
-                MathContext mc = new MathContext(5, RoundingMode.HALF_UP);
-                BigDecimal num = decA.divide(decB, mc);
-                return num.toString();
-            }else {
-                if (this.signum() == 1) {
-                    return "\\frac{" + a.abs().toString() + "}{" + b.abs().toString() + "}";
-                } else {
-                    return "-\\frac{" + a.abs().toString() + "}{" + b.abs().toString() + "}";
-                }
+        } else {
+            switch (formatMode.getDecimalMode()) {
+                case NumberFormatMode.DECIMAL_FORM:
+                    BigDecimal decA = new BigDecimal(a);
+                    BigDecimal decB = new BigDecimal(b);
+                    MathContext mc = new MathContext(formatMode.getDecimalAccuracy(), RoundingMode.HALF_UP);
+                    BigDecimal num = decA.divide(decB, mc);
+                    return num.toString();
+                case NumberFormatMode.FRACTIONAL_FORM:
+                    if (this.signum() == 1) {
+                        return "\\frac{" + a.abs().toString() + "}{" + b.abs().toString() + "}";
+                    } else {
+                        return "-\\frac{" + a.abs().toString() + "}{" + b.abs().toString() + "}";
+                    }
+                case NumberFormatMode.AUTO:
+                    if (Math.max(a.toString().length(), b.toString().length()) > formatMode.getFractionThreshold()) {
+                        NumberFormatMode mode = new NumberFormatModeBuilder().withDecimalMode(NumberFormatMode.DECIMAL_FORM)
+                                .setDecimalAccuracy(formatMode.getDecimalAccuracy())
+                                .setFractionThreshold(formatMode.getFractionThreshold())
+                                .build();
+                        return this.toLatex(mode);
+                    } else {
+                        return this.toLatex(new NumberFormatModeBuilder().withDecimalMode(NumberFormatMode.FRACTIONAL_FORM).build());
+                    }
+                default:
+                    throw new IllegalArgumentException("Unknown mode " + formatMode.getDecimalMode());
             }
         }
+    }
+
+    public double toDouble() {
+        return a.doubleValue() / b.doubleValue();
     }
 
     public BigInteger getA() {

@@ -1,5 +1,7 @@
 package com.ttyrovou.Math.Numbers;
 
+import com.ttyrovou.Math.Utils.NumberFormatMode;
+
 public class Complex {
     public static final Complex ONE = new Complex(Fraction.ONE, Fraction.ZERO);
     public static final Complex ZERO = new Complex(Fraction.ZERO, Fraction.ZERO);
@@ -11,73 +13,90 @@ public class Complex {
         this.im = im;
     }
 
-    public Complex (String s){
-        if(s.contains("i")){ //NON-NLS
-            if(s.indexOf("i") != s.length() - 1){
+    public Complex(String s) {
+        if (s.contains("i")) { //NON-NLS
+            if (s.indexOf("i") != s.length() - 1) {
                 throw new NumberFormatException("Multiple 'i's or text after 'i'");
             }
             //find complex part separator
             char[] charArray = s.toCharArray();
             int separatorIndex = 0;
-            for (int i = charArray.length - 1; i > 0 ; i--) {
-                if ((charArray[i] == '+' || charArray[i] == '-') && charArray[i - 1] != '/'){
+            for (int i = charArray.length - 1; i > 0; i--) {
+                if ((charArray[i] == '+' || charArray[i] == '-') && charArray[i - 1] != '/') {
                     separatorIndex = i;
                     break;
                 }
             }
-            if(separatorIndex == 0){
+            if (separatorIndex == 0) {
                 this.re = Fraction.ZERO;
             } else {
                 this.re = new Fraction(s.substring(0, separatorIndex));
             }
             this.im = parseImPart(s.substring(separatorIndex));
-        }else{
+        } else if (s.contains("∠")) {
+            String[] splited = s.split("∠");
+            if (splited.length == 2) {
+                Fraction radius = new Fraction(splited[0]);
+                Fraction angle = new Fraction(splited[1]);
+                System.out.println(Math.cos(angle.toDouble()));
+                this.re = radius.multiply(Fraction.ofDouble(Math.cos(angle.toDouble())));
+                this.im = radius.multiply(Fraction.ofDouble(Math.sin(angle.toDouble())));
+            } else {
+                throw new NumberFormatException("Wrong use of \"∠\"");
+            }
+        } else {
             this.im = Fraction.ZERO;
             this.re = new Fraction(s);
         }
-        if(this.im == null || this.re == null){
+        if (this.im == null || this.re == null) {
             throw new NumberFormatException("Complex number not formatted properly.");
         }
     }
 
-    public static Complex from(int a) {
-        return new Complex(Fraction.from(a), Fraction.ZERO);
+    public static Complex ofPolar(Fraction radius, Fraction angle) {
+        Fraction real = radius.multiply(Fraction.ofDouble(Math.cos(angle.toDouble())));
+        Fraction imag = radius.multiply(Fraction.ofDouble(Math.sin(angle.toDouble())));
+        return new Complex(real, imag);
+    }
+
+    public static Complex ofInt(int a) {
+        return new Complex(Fraction.ofInt(a), Fraction.ZERO);
     }
 
     private Fraction parseImPart(String s) {
-        if(s.length() == 1 || s.charAt(s.length() - 2) == '+'){
+        if (s.length() == 1 || s.charAt(s.length() - 2) == '+') {
             return Fraction.ONE;
-        }else if(s.charAt(s.length() - 2) == '-'){
-            return Fraction.from(-1);
-        }else{
+        } else if (s.charAt(s.length() - 2) == '-') {
+            return Fraction.ofInt(-1);
+        } else {
             return new Fraction(s.substring(0, s.length() - 1));
         }
     }
 
-    public Complex add(Complex complex){
+    public Complex add(Complex complex) {
         return new Complex(this.re.add(complex.getRe()), this.im.add(complex.getIm()));
     }
 
-    public Complex subtract(Complex complex){
+    public Complex subtract(Complex complex) {
         return this.add(complex.opposite());
     }
 
-    public Complex multiply(Complex complex){
+    public Complex multiply(Complex complex) {
         return new Complex(this.getRe().multiply(complex.getRe())
                 .subtract(this.getIm().multiply(complex.getIm())),
                 this.getRe().multiply(complex.getIm())
                         .add(this.getIm().multiply(complex.getRe())));
     }
 
-    public Complex divide(Complex complex){
+    public Complex divide(Complex complex) {
         return this.multiply(complex.inverse());
     }
 
-    public Complex opposite(){
+    public Complex opposite() {
         return new Complex(re.opposite(), im.opposite());
     }
 
-    public Complex inverse(){
+    public Complex inverse() {
         Fraction realPart = re.divide(re.multiply(re).add(im.multiply(im)));
         Fraction imPart = im.divide(re.multiply(re).add(im.multiply(im))).opposite();
         return new Complex(realPart, imPart);
@@ -104,47 +123,79 @@ public class Complex {
         if (im.equals(Fraction.ZERO)) {
             return re.toString();
         } else if (re.equals(Fraction.ZERO)) {
-            if(im.equals(Fraction.ONE)){
+            if (im.equals(Fraction.ONE)) {
                 return "i";
-            }else if(im.equals(Fraction.from(-1))){
+            } else if (im.equals(Fraction.ofInt(-1))) {
                 return "-i";
-            }else if(im.equals(Fraction.ZERO)){
+            } else if (im.equals(Fraction.ZERO)) {
                 return "0";
             }
             return im.toString() + "i";
         } else {
-            if(im.equals(Fraction.ONE)){
+            if (im.equals(Fraction.ONE)) {
                 return re.toString() + "+i";
-            }else if(im.equals(Fraction.from(-1))){
+            } else if (im.equals(Fraction.ofInt(-1))) {
                 return re.toString() + "-i";
             }
             return re.toString() + (im.toString().startsWith("-") ? "" : "+") + im.toString() + "i";
         }
     }
 
-    public String toLatex(boolean decimal) {
-        if(im.equals(Fraction.ZERO)){
-            return re.toLatex(decimal);
-        } else if (re.equals(Fraction.ZERO)) {
-            return imLatex(im, decimal);
-        }else{
-            return re.toLatex(decimal) + (im.signum() > 0 ? "+" : "") + imLatex(im, decimal);
+    public String toLatex(NumberFormatMode formatMode) {
+        switch (formatMode.getComplexMode()) {
+            case NumberFormatMode.CARTESIAN_FORM:
+                if (im.equals(Fraction.ZERO)) {
+                    return re.toLatex(formatMode);
+                } else if (re.equals(Fraction.ZERO)) {
+                    return imLatex(im, formatMode);
+                } else {
+                    return re.toLatex(formatMode) + (im.signum() > 0 ? "+" : "") + imLatex(im, formatMode);
+                }
+            case NumberFormatMode.POLAR_FORM:
+                if (getAngle() == Fraction.ZERO) {
+                    return re.toLatex(formatMode);
+                }
+                return getRadius().toLatex(formatMode) + "∠" + getAngle().toLatex(formatMode);
+            default:
+                throw new IllegalArgumentException("Unknown mode " + formatMode.getComplexMode());
         }
     }
 
-    public String imLatex (Fraction im, boolean decimal) {
+    private String imLatex(Fraction im, NumberFormatMode formatMode) {
         if (im.equals(Fraction.ONE)) {
             return "i";
-        } else if (im.equals(Fraction.from(-1))) {
+        } else if (im.equals(Fraction.ofInt(-1))) {
             return "-i";
         } else {
-            return im.toLatex(decimal) + "i";
+            return im.toLatex(formatMode) + "i";
         }
     }
 
-    public Fraction getRe() { return re; }
+    public Fraction getRe() {
+        return re;
+    }
 
     public Fraction getIm() {
         return im;
+    }
+
+    public Fraction getRadius() {
+        return Fraction.ofDouble(Math.hypot(re.toDouble(), im.toDouble()));
+    }
+
+    public Fraction getAngle() {
+        if (im.signum() > 0) {
+            return Fraction.ofDouble(Math.atan(im.divide(re).toDouble()));
+        } else if (im.signum() < 0 && re.signum() >= 0) {
+            return Fraction.ofDouble(Math.atan(im.divide(re).toDouble()) + Math.PI);
+        } else if (im.signum() < 0 && re.signum() < 0) {
+            return Fraction.ofDouble(Math.atan(im.divide(re).toDouble()) - Math.PI);
+        } else if (im.signum() == 0 && re.signum() > 0) {
+            return Fraction.ofDouble(Math.PI / 2);
+        } else if (im.signum() == 0 && re.signum() < 0) {
+            return Fraction.ofDouble(-Math.PI / 2);
+        } else {
+            return Fraction.ZERO;
+        }
     }
 }

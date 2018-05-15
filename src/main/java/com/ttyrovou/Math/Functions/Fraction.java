@@ -20,7 +20,7 @@ public class Fraction extends Function {
     @Override
     public Function derivative() {
         return new Fraction(new Sum(new Product(numerator.derivative(), denominator),
-                new Product(new Constant(Complex.from(-1)), new Product(numerator, denominator.derivative()))), //derivative numerator
+                new Product(new Constant(Complex.ofInt(-1)), new Product(numerator, denominator.derivative()))), //derivative numerator
                 new Product(denominator, denominator)); //derivative denominator
     }
 
