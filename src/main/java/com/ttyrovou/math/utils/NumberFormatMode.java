@@ -1,4 +1,4 @@
-package com.ttyrovou.Math.Utils;
+package com.ttyrovou.math.utils;
 
 public class NumberFormatMode {
     public static final int CARTESIAN_FORM = 0;
@@ -8,16 +8,22 @@ public class NumberFormatMode {
     public static final int FRACTIONAL_FORM = 3;
     public static final int AUTO = 4;
 
+    public static final int SQUARE_BRACKETS = 5;
+    public static final int PARENTHESIS = 6;
+    public static final int STRAIGHT_LINES = 7;
+
     private int fractionThreshold;
     private int decimalAccuracy;
     private int decimalMode;
     private int complexMode;
+    private int matrixEnclosures;
 
-    NumberFormatMode(int fractionThreshold, int decimalAccuracy, int decimalMode, int complexMode) {
+    NumberFormatMode(int fractionThreshold, int decimalAccuracy, int decimalMode, int complexMode, int matrixEnclosures) {
         this.fractionThreshold = fractionThreshold;
         this.decimalAccuracy = decimalAccuracy;
         this.decimalMode = decimalMode;
         this.complexMode = complexMode;
+        this.matrixEnclosures = matrixEnclosures;
     }
 
     public int getFractionThreshold() {
@@ -34,5 +40,9 @@ public class NumberFormatMode {
 
     public int getComplexMode() {
         return complexMode;
+    }
+
+    public int getMatrixEnclosures() {
+        return matrixEnclosures;
     }
 }

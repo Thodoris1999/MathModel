@@ -1,8 +1,8 @@
 package com.ttyrovou.examples;
 
-import com.ttyrovou.Math.Functions.Polynomial;
-import com.ttyrovou.Math.Numbers.Complex;
-import com.ttyrovou.Math.Numbers.Fraction;
+import com.ttyrovou.math.functions.Polynomial;
+import com.ttyrovou.math.numbers.Complex;
+import com.ttyrovou.math.numbers.Fraction;
 
 public class PolynomialExample {
     public static void main(String[] args) {

@@ -1,8 +1,8 @@
-package com.ttyrovou.Math.Numbers;
+package com.ttyrovou.math.numbers;
 
-import com.ttyrovou.Math.Utils.NumberFormatMode;
-import com.ttyrovou.Math.Utils.NumberFormatModeBuilder;
-import com.ttyrovou.Math.Utils.NumberUtils;
+import com.ttyrovou.math.utils.NumberFormatMode;
+import com.ttyrovou.math.utils.NumberFormatModeBuilder;
+import com.ttyrovou.math.utils.NumberUtils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -28,6 +28,11 @@ public class Fraction {
         }
         this.a = a;
         this.b = b;
+    }
+
+    public Fraction(Fraction other) {
+        this.a = other.getA();
+        this.b = other.getB();
     }
 
     public Fraction(BigInteger a) {
@@ -181,7 +186,6 @@ public class Fraction {
                     if (Math.max(a.toString().length(), b.toString().length()) > formatMode.getFractionThreshold()) {
                         NumberFormatMode mode = new NumberFormatModeBuilder().withDecimalMode(NumberFormatMode.DECIMAL_FORM)
                                 .setDecimalAccuracy(formatMode.getDecimalAccuracy())
-                                .setFractionThreshold(formatMode.getFractionThreshold())
                                 .build();
                         return this.toLatex(mode);
                     } else {

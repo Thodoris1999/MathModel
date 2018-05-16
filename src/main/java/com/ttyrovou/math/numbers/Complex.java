@@ -1,6 +1,6 @@
-package com.ttyrovou.Math.Numbers;
+package com.ttyrovou.math.numbers;
 
-import com.ttyrovou.Math.Utils.NumberFormatMode;
+import com.ttyrovou.math.utils.NumberFormatMode;
 
 public class Complex {
     public static final Complex ONE = new Complex(Fraction.ONE, Fraction.ZERO);
@@ -152,7 +152,7 @@ public class Complex {
                     return re.toLatex(formatMode) + (im.signum() > 0 ? "+" : "") + imLatex(im, formatMode);
                 }
             case NumberFormatMode.POLAR_FORM:
-                if (getAngle() == Fraction.ZERO) {
+                if (getAngle().equals(Fraction.ZERO)) {
                     return re.toLatex(formatMode);
                 }
                 return getRadius().toLatex(formatMode) + "∠" + getAngle().toLatex(formatMode);
@@ -184,15 +184,15 @@ public class Complex {
     }
 
     public Fraction getAngle() {
-        if (im.signum() > 0) {
+        if (re.signum() > 0) {
             return Fraction.ofDouble(Math.atan(im.divide(re).toDouble()));
-        } else if (im.signum() < 0 && re.signum() >= 0) {
+        } else if (re.signum() < 0 && im.signum() >= 0) {
             return Fraction.ofDouble(Math.atan(im.divide(re).toDouble()) + Math.PI);
-        } else if (im.signum() < 0 && re.signum() < 0) {
+        } else if (re.signum() < 0 && im.signum() < 0) {
             return Fraction.ofDouble(Math.atan(im.divide(re).toDouble()) - Math.PI);
-        } else if (im.signum() == 0 && re.signum() > 0) {
+        } else if (re.signum() == 0 && im.signum() > 0) {
             return Fraction.ofDouble(Math.PI / 2);
-        } else if (im.signum() == 0 && re.signum() < 0) {
+        } else if (re.signum() == 0 && im.signum() < 0) {
             return Fraction.ofDouble(-Math.PI / 2);
         } else {
             return Fraction.ZERO;

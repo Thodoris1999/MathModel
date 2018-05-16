@@ -1,6 +1,6 @@
-package com.ttyrovou.Math.Functions;
+package com.ttyrovou.math.functions;
 
-import com.ttyrovou.Math.Numbers.Complex;
+import com.ttyrovou.math.numbers.Complex;
 
 import java.util.function.Predicate;
 

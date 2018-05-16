@@ -1,7 +1,7 @@
-package com.ttyrovou.Math.Functions;
+package com.ttyrovou.math.functions;
 
-import com.ttyrovou.Math.Numbers.Complex;
-import com.ttyrovou.Math.Numbers.Fraction;
+import com.ttyrovou.math.numbers.Complex;
+import com.ttyrovou.math.numbers.Fraction;
 
 import java.util.function.Predicate;
 
