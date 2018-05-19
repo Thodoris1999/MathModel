@@ -11,7 +11,7 @@ import java.math.RoundingMode;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Fraction {
+public class Fraction implements Comparable<Fraction> {
     public static final Fraction ONE = new Fraction(BigInteger.ONE, BigInteger.ONE);
     public static final Fraction ZERO = new Fraction(BigInteger.ZERO, BigInteger.ONE);
 
@@ -153,14 +153,12 @@ public class Fraction {
     }
 
     public boolean equals(Fraction fraction) {
-        if (a.equals(new BigInteger("0")) && fraction.getA().equals(new BigInteger("0"))) {
-            return true;
-        } else {
-            Fraction thisSimplified = this.abs().simplified();
-            Fraction fractionSimplified = fraction.abs().simplified();
-            return this.signum() == fraction.signum() && (thisSimplified.getB().equals(fractionSimplified.getB()) &&
-                    thisSimplified.getA().equals(fractionSimplified.getA()));
-        }
+        return a.multiply(fraction.getB()).equals(b.multiply(fraction.getA()));
+    }
+
+    @Override
+    public int compareTo(Fraction fraction) {
+        return a.multiply(fraction.getB()).subtract(b.multiply(fraction.getA())).intValue();
     }
 
     public String toLatex(NumberFormatMode formatMode) {
