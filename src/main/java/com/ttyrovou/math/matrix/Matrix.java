@@ -6,6 +6,7 @@ import com.ttyrovou.math.utils.NumberFormatMode;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 public class Matrix {
     private LinkedList<LinkedList<Complex>> elements;
@@ -90,7 +91,7 @@ public class Matrix {
             }
             return result;
         } else {
-            return null;
+            throw new UnsupportedOperationException("Atteampting to add matrices of non equal dimensions");
         }
     }
 
@@ -104,7 +105,7 @@ public class Matrix {
             }
             return result;
         } else {
-            return null;
+            throw new UnsupportedOperationException("Atteampting to subtract matrices of non equal dimensions");
         }
     }
 
@@ -122,7 +123,7 @@ public class Matrix {
             }
             return result;
         } else {
-            return null;
+            throw new UnsupportedOperationException("The first matrix's column count must be equal to the second's row count");
         }
     }
 
@@ -137,26 +138,26 @@ public class Matrix {
     public Complex det() {
         if (this.getColCount() == this.getRowCount()) {
             GaussianElimination elimination = new GaussianElimination(this);
-            Complex maybeDet = elimination.getDet();
-            if (maybeDet != null) {
-                return maybeDet;
-            } else {
-                if (this.getRowCount() == 1) {
-                    return this.get(0, 0);
+            Optional<Complex> maybeDet = elimination.getDet();
+            return maybeDet.orElseGet(this::slowSquareDet);
+        } else {
+            throw new UnsupportedOperationException("Attempting to get the determinant of a non square matrix");
+        }
+    }
+
+    public Complex slowSquareDet() {
+        if (this.getRowCount() == 1) {
+            return this.get(0, 0);
+        } else {
+            Complex result = Complex.ZERO;
+            for (int i = 0; i < this.getColCount(); i++) {
+                if (i % 2 == 0) {
+                    result = result.add(this.get(0, i).multiply(this.removeRow(0).removeColumn(i).det()));
                 } else {
-                    Complex result = Complex.ZERO;
-                    for (int i = 0; i < this.getColCount(); i++) {
-                        if (i % 2 == 0) {
-                            result = result.add(this.get(0, i).multiply(this.removeRow(0).removeColumn(i).det()));
-                        } else {
-                            result = result.subtract(this.get(0, i).multiply(this.removeRow(0).removeColumn(i).det()));
-                        }
-                    }
-                    return result;
+                    result = result.subtract(this.get(0, i).multiply(this.removeRow(0).removeColumn(i).det()));
                 }
             }
-        } else {
-            return null;
+            return result;
         }
     }
 
@@ -179,7 +180,7 @@ public class Matrix {
             lu[1] = elimination.getRowEchelon();
             return lu;
         } else {
-            return null;
+            throw new UnsupportedOperationException("Failed to decompose matrix");
         }
     }
 
@@ -189,7 +190,7 @@ public class Matrix {
         GaussianElimination elimination = new GaussianElimination(this);
         Matrix rref = elimination.getReducedRowEchelon();
         List<Integer> pivotIndices = elimination.getPivotIndices();
-        if (pivotIndices.contains(rref.colCount)) return null;
+        if (pivotIndices.contains(rref.colCount)) return sol;
 
         //loop through all non pivot columns
         for (int i = 0; i < rref.colCount; i++) {
@@ -262,7 +263,7 @@ public class Matrix {
 
     public Complex[] getCharacteristicPolynomial() {
         if (colCount != rowCount) {
-            return null;
+            throw new ArithmeticException("Attempting to calculate characteristic polynomial of non square matrix");
         }
         Complex[] coefficients = new Complex[colCount + 1];
         Matrix prev = Matrix.fromZero(colCount);

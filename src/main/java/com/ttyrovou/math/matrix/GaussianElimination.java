@@ -2,8 +2,10 @@ package com.ttyrovou.math.matrix;
 
 import com.ttyrovou.math.numbers.Complex;
 
+import javax.naming.OperationNotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class GaussianElimination {
     private List<Integer> pivotIndices;
@@ -85,7 +87,6 @@ public class GaussianElimination {
                 }
             } else {
                 isInvertible = false;
-                inverse = null;
             }
         }
         reducedRowEchelonPerformed = true;
@@ -133,7 +134,7 @@ public class GaussianElimination {
         rowEchelonPerformed = true;
     }
 
-    public Complex getDet() {
+    public Optional<Complex> getDet() {
         if (!rowEchelonPerformed) {
             rowEchelon();
         }
@@ -142,9 +143,9 @@ public class GaussianElimination {
             for (int i = 0; i < rowEchelon.getRowCount(); i++) {
                 result = result.multiply(rowEchelon.get(i, i));
             }
-            return result;
+            return Optional.of(result);
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 
@@ -169,7 +170,7 @@ public class GaussianElimination {
         if (isDecomposable) {
             return lower;
         } else {
-            return null;
+            throw new UnsupportedOperationException("Matrix is not LU decomposable");
         }
     }
 
@@ -178,7 +179,7 @@ public class GaussianElimination {
             reducedRowEchelon();
         }
         if (!isInvertible) {
-            return null;
+            throw new UnsupportedOperationException("Matrix is not invertible decomposable");
         }
         return inverse;
     }

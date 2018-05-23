@@ -48,9 +48,6 @@ public class Complex {
             this.im = Fraction.ZERO;
             this.re = new Fraction(s);
         }
-        if (this.im == null || this.re == null) {
-            throw new NumberFormatException("Complex number not formatted properly.");
-        }
     }
 
     public static Complex ofPolar(Fraction radius, Fraction angle) {

@@ -60,9 +60,6 @@ public class Fraction implements Comparable<Fraction> {
         if (b.equals(new BigInteger("0"))) {
             throw new ArithmeticException("Fraction cannot have zero as denominator");
         }
-        if (this.a == null || this.b == null) {
-            throw new NumberFormatException("Fraction not formatted correctly.");
-        }
     }
 
     public static Fraction ofInt(int a) {
