@@ -179,7 +179,7 @@ public class GaussianElimination {
             reducedRowEchelon();
         }
         if (!isInvertible) {
-            throw new UnsupportedOperationException("Matrix is not invertible decomposable");
+            throw new UnsupportedOperationException("Matrix is not invertible");
         }
         return inverse;
     }
