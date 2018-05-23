@@ -2,7 +2,6 @@ package com.ttyrovou.math.matrix;
 
 import com.ttyrovou.math.numbers.Complex;
 
-import javax.naming.OperationNotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
