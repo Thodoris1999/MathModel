@@ -358,9 +358,9 @@ public class Matrix {
         return elements.size();
     }
 
-    public StringBuilder toLatex(NumberFormatMode formatMode) {
+    public String toLatex(NumberFormatMode formatMode) {
         StringBuilder returnString = new StringBuilder();
-        returnString.append("\n \\left");
+        returnString.append("\\left");
         switch (formatMode.getMatrixEnclosures()) {
             case NumberFormatMode.PARENTHESIS:
                 returnString.append("(");
@@ -400,8 +400,7 @@ public class Matrix {
             default:
                 throw new IllegalArgumentException("Unknown matrix enclosure style");
         }
-        returnString.append("\n "); //NON-NLS
-        return returnString;
+        return returnString.toString();
     }
 
     @Override
