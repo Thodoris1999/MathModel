@@ -136,6 +136,7 @@ public class Matrix {
     }
 
     public Complex det() {
+        System.out.print("got throu main");
         if (this.getColCount() == this.getRowCount()) {
             GaussianElimination elimination = new GaussianElimination(this);
             Optional<Complex> maybeDet = elimination.getDet();
