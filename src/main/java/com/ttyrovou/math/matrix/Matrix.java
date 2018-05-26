@@ -251,7 +251,7 @@ public class Matrix {
 
     public Complex trace() {
         if (colCount != rowCount) {
-            throw new ArithmeticException("Trace of non square matrices is not defined");
+            throw new UnsupportedOperationException("Trace of non square matrices is not defined");
         }
 
         Complex sum = Complex.ZERO;
@@ -263,7 +263,7 @@ public class Matrix {
 
     public Complex[] getCharacteristicPolynomial() {
         if (colCount != rowCount) {
-            throw new ArithmeticException("Attempting to calculate characteristic polynomial of non square matrix");
+            throw new UnsupportedOperationException("Attempting to calculate characteristic polynomial of non square matrix");
         }
         Complex[] coefficients = new Complex[colCount + 1];
         Matrix prev = Matrix.fromZero(colCount);
