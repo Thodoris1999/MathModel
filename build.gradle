@@ -1,4 +1,3 @@
-
 apply plugin: 'java'
 
 repositories {
@@ -18,12 +17,12 @@ sourceSets {
     }
 }
 
-task java7Jar(type: Jar){
+task java7Jar(type: Jar) {
     from sourceSets.main.output
     from sourceSets.java7.output
 }
 
-task releaseJar(type: Jar){
+task releaseJar(type: Jar) {
     from sourceSets.main.output
     from sourceSets.release.output
 }

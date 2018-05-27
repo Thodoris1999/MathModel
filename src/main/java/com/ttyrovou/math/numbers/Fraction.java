@@ -149,8 +149,14 @@ public class Fraction implements Comparable<Fraction> {
         }
     }
 
-    public boolean equals(Fraction fraction) {
-        return a.multiply(fraction.getB()).equals(b.multiply(fraction.getA()));
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (this.getClass() != obj.getClass()) return false;
+
+        Fraction other = (Fraction) obj;
+        return a.multiply(other.getB()).equals(b.multiply(other.getA()));
     }
 
     @Override

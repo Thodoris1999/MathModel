@@ -111,8 +111,14 @@ public class Complex {
         }
     }
 
-    public boolean equals(Complex complex) {
-        return im.equals(complex.getIm()) && re.equals(complex.getRe());
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (this.getClass() != obj.getClass()) return false;
+
+        Complex other = (Complex) obj;
+        return im.equals(other.getIm()) && re.equals(other.getRe());
     }
 
     @Override

@@ -10,17 +10,28 @@ import java.util.Optional;
 
 public class Matrix {
     private LinkedList<LinkedList<Complex>> elements;
-    private int rowCount, colCount;
 
     public Matrix(LinkedList<LinkedList<Complex>> elements) {
-        rowCount = elements.size();
-        colCount = elements.get(0).size();
         this.elements = elements;
     }
 
+    public Matrix(Complex[][] elements) {
+        int size = elements[0].length;
+        for (int i = 1; i < elements.length; i++) {
+            if (elements[i].length != size) {
+                throw new IllegalArgumentException("Array not convertible to matrix!");
+            }
+        }
+        this.elements = new LinkedList<>();
+        for (int i = 0; i < elements.length; i++) {
+            this.elements.add(new LinkedList<>());
+            for (int j = 0; j < elements[0].length; j++) {
+                this.elements.get(i).add(elements[i][j]);
+            }
+        }
+    }
+
     public Matrix(int rowCount, int colCount) {
-        this.colCount = colCount;
-        this.rowCount = rowCount;
         this.elements = new LinkedList<>();
 
         for (int i = 0; i < rowCount; i++) {
@@ -56,9 +67,6 @@ public class Matrix {
     }
 
     public Matrix(String[] strings, int rowCount, int colCount) {
-        this.colCount = colCount;
-        this.rowCount = rowCount;
-
         this.elements = new LinkedList<>();
         for (int i = 0; i < rowCount; i++) {
             this.elements.add(new LinkedList<>());
@@ -70,8 +78,6 @@ public class Matrix {
 
     public Matrix(Matrix other) {
         LinkedList<LinkedList<Complex>> newElements = new LinkedList<>();
-        this.colCount = other.colCount;
-        this.rowCount = other.rowCount;
         for (int i = 0; i < other.elements.size(); i++) {
             newElements.add(new LinkedList<>());
             for (int j = 0; j < other.elements.get(0).size(); j++) {
@@ -84,8 +90,8 @@ public class Matrix {
     public Matrix add(Matrix matrix) {
         if (this.getColCount() == matrix.getColCount() && this.getRowCount() == matrix.getRowCount()) {
             Matrix result = new Matrix(this.getRowCount(), this.getColCount());
-            for (int i = 0; i < rowCount; i++) {
-                for (int j = 0; j < colCount; j++) {
+            for (int i = 0; i < getRowCount(); i++) {
+                for (int j = 0; j < getColCount(); j++) {
                     result.set(i, j, this.get(i, j).add(matrix.get(i, j)));
                 }
             }
@@ -98,8 +104,8 @@ public class Matrix {
     public Matrix subtract(Matrix matrix) {
         if (this.getColCount() == matrix.getColCount() && this.getRowCount() == matrix.getRowCount()) {
             Matrix result = new Matrix(this.getRowCount(), this.getColCount());
-            for (int i = 0; i < rowCount; i++) {
-                for (int j = 0; j < colCount; j++) {
+            for (int i = 0; i < getRowCount(); i++) {
+                for (int j = 0; j < getColCount(); j++) {
                     result.set(i, j, this.get(i, j).subtract(matrix.get(i, j)));
                 }
             }
@@ -129,14 +135,14 @@ public class Matrix {
 
     public Matrix multiply(Complex scalar) {
         Matrix result = new Matrix(this);
-        for (int i = 0; i < rowCount; i++) {
+        for (int i = 0; i < getRowCount(); i++) {
             result.scaleRow(i, scalar);
         }
         return result;
     }
 
     public Complex det() {
-        System.out.print("got throu main");
+        System.out.print("got throu java7");
         if (this.getColCount() == this.getRowCount()) {
             GaussianElimination elimination = new GaussianElimination(this);
             Optional<Complex> maybeDet = elimination.getDet();
@@ -191,10 +197,10 @@ public class Matrix {
         GaussianElimination elimination = new GaussianElimination(this);
         Matrix rref = elimination.getReducedRowEchelon();
         List<Integer> pivotIndices = elimination.getPivotIndices();
-        if (pivotIndices.contains(rref.colCount)) return sol;
+        if (pivotIndices.contains(rref.getColCount())) return sol;
 
         //loop through all non pivot columns
-        for (int i = 0; i < rref.colCount; i++) {
+        for (int i = 0; i < rref.getColCount(); i++) {
             if (pivotIndices.contains(i)) {
                 continue;
             }
@@ -251,29 +257,29 @@ public class Matrix {
     }
 
     public Complex trace() {
-        if (colCount != rowCount) {
+        if (getColCount() != getRowCount()) {
             throw new UnsupportedOperationException("Trace of non square matrices is not defined");
         }
 
         Complex sum = Complex.ZERO;
-        for (int i = 0; i < rowCount; i++) {
+        for (int i = 0; i < getRowCount(); i++) {
             sum = sum.add(this.get(i, i));
         }
         return sum;
     }
 
     public Complex[] getCharacteristicPolynomial() {
-        if (colCount != rowCount) {
+        if (getColCount() != getRowCount()) {
             throw new UnsupportedOperationException("Attempting to calculate characteristic polynomial of non square matrix");
         }
-        Complex[] coefficients = new Complex[colCount + 1];
-        Matrix prev = Matrix.fromZero(colCount);
-        coefficients[colCount] = Complex.ONE;
+        Complex[] coefficients = new Complex[getColCount() + 1];
+        Matrix prev = Matrix.fromZero(getColCount());
+        coefficients[getColCount()] = Complex.ONE;
         Matrix cur;
-        for (int i = 1; i < colCount + 1; i++) {
+        for (int i = 1; i < getColCount() + 1; i++) {
             cur = this.multiply(prev)
-                    .add(Matrix.fromUnit(colCount).multiply(coefficients[colCount + 1 - i]));
-            coefficients[colCount - i] = this.multiply(cur)
+                    .add(Matrix.fromUnit(getColCount()).multiply(coefficients[getColCount() + 1 - i]));
+            coefficients[getColCount() - i] = this.multiply(cur)
                     .trace()
                     .divide(Complex.ofInt(i))
                     .opposite();
@@ -332,7 +338,7 @@ public class Matrix {
 
     public LinkedList<Complex> getColumn(int index) {
         LinkedList<Complex> returnCol = new LinkedList<>();
-        for (int i = 0; i < rowCount; i++) {
+        for (int i = 0; i < getRowCount(); i++) {
             returnCol.add(this.get(i, index));
         }
 
@@ -357,6 +363,22 @@ public class Matrix {
 
     public int getRowCount() {
         return elements.size();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (this.getClass() != obj.getClass()) return false;
+
+        Matrix other = (Matrix) obj;
+        if (this.getRowCount()!= other.getRowCount() || this.getColCount() != other.getColCount()) return false;
+        for (int i = 0; i < this.getRowCount(); i++) {
+            for (int j = 0; j < this.getColCount(); j++) {
+                if (!this.get(i, j).equals(other.get(i, j))) return false;
+            }
+        }
+        return true;
     }
 
     public String toLatex(NumberFormatMode formatMode) {

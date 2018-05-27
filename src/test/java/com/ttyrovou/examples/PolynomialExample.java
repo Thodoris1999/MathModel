@@ -1,7 +1,6 @@
 package com.ttyrovou.examples;
 
 import com.ttyrovou.math.functions.Polynomial;
-import com.ttyrovou.math.matrix.Matrix;
 import com.ttyrovou.math.numbers.Complex;
 import com.ttyrovou.math.numbers.Fraction;
 
@@ -19,7 +18,6 @@ public class PolynomialExample {
         System.out.println("Value at 1+i");
         Complex num = new Complex(Fraction.ONE, Fraction.ONE);
         System.out.println(pol.eval(num));
-        Matrix.fromUnit(5).det();
 
         Complex polar = new Complex("2∠1.6");
         System.out.println(polar.getRe().toDouble());
