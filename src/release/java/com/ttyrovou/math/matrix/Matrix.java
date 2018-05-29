@@ -89,48 +89,47 @@ public class Matrix {
 
     public Matrix add(Matrix matrix) {
         if (this.getColCount() == matrix.getColCount() && this.getRowCount() == matrix.getRowCount()) {
-            Matrix result = new Matrix(this.getRowCount(), this.getColCount());
+            LinkedList<LinkedList<Complex>> resultElements = new LinkedList<>();
             for (int i = 0; i < getRowCount(); i++) {
+                resultElements.add(new LinkedList<>());
                 for (int j = 0; j < getColCount(); j++) {
-                    result.set(i, j, this.get(i, j).add(matrix.get(i, j)));
+                    resultElements.get(i).add(this.get(i, j).add(matrix.get(i, j)));
                 }
             }
-            return result;
+            return new Matrix(resultElements);
         } else {
             throw new UnsupportedOperationException("Atteampting to add matrices of non equal dimensions");
         }
     }
 
     public Matrix subtract(Matrix matrix) {
-        if (this.getColCount() == matrix.getColCount() && this.getRowCount() == matrix.getRowCount()) {
-            Matrix result = new Matrix(this.getRowCount(), this.getColCount());
-            for (int i = 0; i < getRowCount(); i++) {
-                for (int j = 0; j < getColCount(); j++) {
-                    result.set(i, j, this.get(i, j).subtract(matrix.get(i, j)));
-                }
-            }
-            return result;
-        } else {
+        if (this.getColCount() != matrix.getColCount() && this.getRowCount() == matrix.getRowCount())
             throw new UnsupportedOperationException("Atteampting to subtract matrices of non equal dimensions");
+        LinkedList<LinkedList<Complex>> resultElements = new LinkedList<>();
+        for (int i = 0; i < getRowCount(); i++) {
+            resultElements.add(new LinkedList<>());
+            for (int j = 0; j < getColCount(); j++) {
+                resultElements.get(i).add(this.get(i, j).subtract(matrix.get(i, j)));
+            }
         }
+        return new Matrix(resultElements);
     }
 
     public Matrix multiply(Matrix matrix) {
-        if (this.getColCount() == matrix.getRowCount()) {
-            Matrix result = new Matrix(this.getRowCount(), matrix.getColCount());
-            for (int i = 0; i < result.getRowCount(); i++) {
-                for (int j = 0; j < matrix.getColCount(); j++) {
-                    Complex sum = Complex.ZERO;
-                    for (int k = 0; k < this.getColCount(); k++) {
-                        sum = sum.add(this.get(i, k).multiply(matrix.get(k, j)));
-                    }
-                    result.set(i, j, sum);
-                }
-            }
-            return result;
-        } else {
+        if (this.getColCount() != matrix.getRowCount())
             throw new UnsupportedOperationException("The first matrix's column count must be equal to the second's row count");
+        LinkedList<LinkedList<Complex>> resultElements = new LinkedList<>();
+        for (int i = 0; i < this.getRowCount(); i++) {
+            resultElements.add(new LinkedList<>());
+            for (int j = 0; j < matrix.getColCount(); j++) {
+                Complex sum = Complex.ZERO;
+                for (int k = 0; k < this.getColCount(); k++) {
+                    sum = sum.add(this.get(i, k).multiply(matrix.get(k, j)));
+                }
+                resultElements.get(i).add(sum);
+            }
         }
+        return new Matrix(resultElements);
     }
 
     public Matrix multiply(Complex scalar) {
@@ -142,14 +141,11 @@ public class Matrix {
     }
 
     public Complex det() {
-        System.out.print("got throu java7");
-        if (this.getColCount() == this.getRowCount()) {
-            GaussianElimination elimination = new GaussianElimination(this);
-            Optional<Complex> maybeDet = elimination.getDet();
-            return maybeDet.orElseGet(this::slowSquareDet);
-        } else {
+        if (this.getColCount() != this.getRowCount())
             throw new UnsupportedOperationException("Attempting to get the determinant of a non square matrix");
-        }
+        GaussianElimination elimination = new GaussianElimination(this);
+        Optional<Complex> maybeDet = elimination.getDet();
+        return maybeDet.orElseGet(this::slowSquareDet);
     }
 
     public Complex slowSquareDet() {
@@ -372,7 +368,7 @@ public class Matrix {
         if (this.getClass() != obj.getClass()) return false;
 
         Matrix other = (Matrix) obj;
-        if (this.getRowCount()!= other.getRowCount() || this.getColCount() != other.getColCount()) return false;
+        if (this.getRowCount() != other.getRowCount() || this.getColCount() != other.getColCount()) return false;
         for (int i = 0; i < this.getRowCount(); i++) {
             for (int j = 0; j < this.getColCount(); j++) {
                 if (!this.get(i, j).equals(other.get(i, j))) return false;
