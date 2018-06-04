@@ -8,7 +8,7 @@ import org.junit.Test;
 
 public class NumberTest {
     @Test
-    public void copmlexAddition() {
+    public void complexAddition() {
         Complex num1 = new Complex(Fraction.ofDouble(3.2), Fraction.ofDouble(-1.1));
         Complex num2 = new Complex(Fraction.ofDouble(5.3), Fraction.ofDouble(2.9));
         Complex sum = num1.add(num2);
@@ -74,5 +74,65 @@ public class NumberTest {
         long elapsed = System.nanoTime() - time;
         System.out.println(elapsed);
         Assert.assertEquals(mulMat, expected);
+    }
+
+    @Test
+    public void determinant() {
+        Complex[][] co1 = {{Complex.ofInt(5), Complex.I},
+                {Complex.ofFraction(Fraction.of(2, 3)), Complex.ofInt(7)}};
+        Matrix mat = new Matrix(co1);
+        Complex expected = new Complex(Fraction.ofInt(35), Fraction.of(-2, 3));
+        long time = System.nanoTime();
+        Complex det = mat.det();
+        long elapsed = System.nanoTime() - time;
+        System.out.println(elapsed);
+        Assert.assertEquals(det, expected);
+    }
+
+    @Test
+    public void rank() {
+        Complex[][] co1 = {{Complex.ofInt(5), Complex.I},
+                {Complex.ofFraction(Fraction.of(2, 3)), Complex.ofInt(7)}};
+        Matrix mat = new Matrix(co1);
+        int expected = 2;
+        long time = System.nanoTime();
+        int rank = mat.rank();
+        long elapsed = System.nanoTime() - time;
+        System.out.println(elapsed);
+        Assert.assertEquals(rank, expected);
+    }
+
+    @Test
+    public void rref() {
+        Complex[][] co1 = {{Complex.ofInt(5), Complex.I},
+                {Complex.ofFraction(Fraction.of(2, 3)), Complex.ofInt(7)}};
+        Complex[][] exp = {{Complex.ONE, Complex.ZERO},
+                {Complex.ZERO, Complex.ONE}};
+        Matrix mat = new Matrix(co1);
+        Matrix expected = new Matrix(exp);
+        long time = System.nanoTime();
+        Matrix rref = mat.rref();
+        long elapsed = System.nanoTime() - time;
+        System.out.println(elapsed);
+        Assert.assertEquals(rref, expected);
+    }
+
+    @Test
+    public void ludecomposition() {
+        Complex[][] co1 = {{Complex.ofInt(5), Complex.I},
+                {Complex.ofFraction(Fraction.of(2, 3)), Complex.ofInt(7)}};
+        Complex[][] exp1 = {{Complex.ONE, Complex.ZERO},
+                {Complex.ofFraction(Fraction.of(2, 15)), Complex.ONE}};
+        Complex[][] exp2 = {{Complex.ofInt(5), Complex.I},
+                {Complex.ZERO, new Complex(Fraction.ofInt(7), Fraction.of(2, -15))}};
+        Matrix mat = new Matrix(co1);
+        Matrix lu1 = new Matrix(exp1);
+        Matrix lu2 = new Matrix(exp2);
+        long time = System.nanoTime();
+        Matrix[] lu = mat.luDecomposition();
+        long elapsed = System.nanoTime() - time;
+        System.out.println(elapsed);
+        Assert.assertEquals(lu[0], lu1);
+        Assert.assertEquals(lu[1], lu2);
     }
 }

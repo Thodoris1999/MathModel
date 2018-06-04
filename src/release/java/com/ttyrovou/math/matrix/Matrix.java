@@ -174,7 +174,7 @@ public class Matrix {
         return elimination.getReducedRowEchelon();
     }
 
-    public Matrix[] LUDecomposition() {
+    public Matrix[] luDecomposition() {
         GaussianElimination elimination = new GaussianElimination(this);
         elimination.getRowEchelon();
         if (elimination.isDecomposable()) {
@@ -228,7 +228,7 @@ public class Matrix {
         return sol;
     }
 
-    public LinkedList<LinkedList<Complex>> getImage() {
+    public LinkedList<LinkedList<Complex>> image() {
         LinkedList<LinkedList<Complex>> result = new LinkedList<>();
         Matrix clone = new Matrix(this);
         Matrix transpose = clone.transpose();
@@ -243,7 +243,7 @@ public class Matrix {
         return result;
     }
 
-    public LinkedList<LinkedList<Complex>> getNullspace() {
+    public LinkedList<LinkedList<Complex>> kernel() {
         return this.addColumn(getColCount()).linearSystemSolution();
     }
 

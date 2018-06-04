@@ -5,6 +5,7 @@ import com.ttyrovou.math.utils.NumberFormatMode;
 public class Complex {
     public static final Complex ONE = new Complex(Fraction.ONE, Fraction.ZERO);
     public static final Complex ZERO = new Complex(Fraction.ZERO, Fraction.ZERO);
+    public static final Complex I = new Complex(Fraction.ZERO, Fraction.ONE);
 
     private Fraction re, im;
 
@@ -54,6 +55,10 @@ public class Complex {
         Fraction real = radius.multiply(Fraction.ofDouble(Math.cos(angle.toDouble())));
         Fraction imag = radius.multiply(Fraction.ofDouble(Math.sin(angle.toDouble())));
         return new Complex(real, imag);
+    }
+
+    public static Complex ofFraction(Fraction fraction) {
+        return new Complex(fraction, Fraction.ZERO);
     }
 
     public static Complex ofInt(int a) {

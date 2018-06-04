@@ -62,6 +62,10 @@ public class Fraction implements Comparable<Fraction> {
         }
     }
 
+    public static Fraction of(int a, int b) {
+        return new Fraction(BigInteger.valueOf(a), BigInteger.valueOf(b));
+    }
+
     public static Fraction ofInt(int a) {
         return new Fraction(BigInteger.valueOf(a), BigInteger.ONE);
     }
