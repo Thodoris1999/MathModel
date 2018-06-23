@@ -6,7 +6,7 @@ import com.ttyrovou.math.numbers.Fraction;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class NumberTest {
+public class MatrixTest {
     @Test
     public void complexAddition() {
         Complex num1 = new Complex(Fraction.ofDouble(3.2), Fraction.ofDouble(-1.1));

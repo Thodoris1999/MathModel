@@ -2,9 +2,14 @@ package com.ttyrovou.examples;
 
 import com.ttyrovou.math.functions.Polynomial;
 import com.ttyrovou.math.numbers.Complex;
+import com.ttyrovou.math.numbers.Fraction;
+import com.ttyrovou.math.solvers.LaguerreSolver;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class PolynomialTest {
     @Test
@@ -32,5 +37,17 @@ public class PolynomialTest {
         Polynomial expected = new Polynomial(Complex.ZERO, Complex.ofInt(-1), Complex.ofInt(2));
         Polynomial result = poly1.divide(poly2);
         assertEquals(expected, result);
+    }
+
+    @Test
+    public void findRoots() {
+        Polynomial pol = new Polynomial(Complex.ZERO, Complex.ofInt(-6), Complex.ofInt(-7), Complex.ofInt(1), Complex.ofInt(2));
+        LaguerreSolver solver = new LaguerreSolver();
+        Complex[] allRoots = solver.findAllRoots(pol);
+        assertEquals(4, allRoots.length);
+        assertTrue(Arrays.asList(allRoots).contains(Complex.ofFraction(Fraction.of(-3, 2))));
+        assertTrue(Arrays.asList(allRoots).contains(Complex.ONE.opposite()));
+        assertTrue(Arrays.asList(allRoots).contains(Complex.ofInt(2)));
+        assertTrue(Arrays.asList(allRoots).contains(Complex.ZERO));
     }
 }

@@ -3,9 +3,6 @@ package com.ttyrovou.examples;
 import com.ttyrovou.math.functions.Polynomial;
 import com.ttyrovou.math.numbers.Complex;
 import com.ttyrovou.math.numbers.Fraction;
-import com.ttyrovou.math.solvers.LaguerreSolver;
-import com.ttyrovou.math.utils.NumberFormatMode;
-import com.ttyrovou.math.utils.NumberFormatModeBuilder;
 
 public class PolynomialExample {
     public static void main(String[] args) {
@@ -24,16 +21,6 @@ public class PolynomialExample {
 
         Complex polar = new Complex("2∠1.6");
         System.out.println(polar.getRe().toDouble());
-
-        LaguerreSolver solver = new LaguerreSolver();
-        System.out.println("solution");
-        System.out.println(solver.findRoot(pol).orElse(Complex.I).toLatex(new NumberFormatModeBuilder().build()));
-        Complex[] allRoots = solver.findAllRoots(pol);
-        System.out.println("all solutions of " + pol);
-        NumberFormatMode formatMode = new NumberFormatModeBuilder().build();
-        for (int i = 0; i < allRoots.length; i++) {
-            System.out.println("sol " + allRoots[i].toLatex(formatMode));
-        }
 
         //TODO: use variable types for composition, sum etc
         //TODO: use correct variable names
