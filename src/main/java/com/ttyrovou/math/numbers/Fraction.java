@@ -8,6 +8,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,6 +30,17 @@ public class Fraction implements Comparable<Fraction> {
         }
         this.a = a;
         this.b = b;
+    }
+
+    public Fraction(BigDecimal decimal) {
+        String toString = decimal.toString();
+        if (toString.contains(".")) {
+            this.a = ofDecimalString(toString).getA();
+            this.b = ofDecimalString(toString).getB();
+        } else {
+            this.b = BigInteger.ONE;
+            this.a = new BigInteger(toString);
+        }
     }
 
     public Fraction(Fraction other) {
@@ -70,8 +83,14 @@ public class Fraction implements Comparable<Fraction> {
         return new Fraction(BigInteger.valueOf(a), BigInteger.ONE);
     }
 
+    public static Fraction ofLong(long a) {
+        return new Fraction(BigInteger.valueOf(a), BigInteger.ONE);
+    }
+
     public static Fraction ofDouble(double a) {
-        String dec = Double.toString(a);
+        DecimalFormat decimalFormat = new DecimalFormat("###.#########");
+        String dec = decimalFormat.format(a);
+        if (!dec.contains(".")) return Fraction.ofInt((int) a);
         return Fraction.ofDecimalString(dec);
     }
 
@@ -138,6 +157,55 @@ public class Fraction implements Comparable<Fraction> {
         } else {
             return this.inverse().toThe(-a);
         }
+    }
+
+    public Fraction sqrt() {
+        Fraction approximation = this.approximate(100);
+        if (approximation.equals(Fraction.ZERO)) return Fraction.ZERO;
+        BigDecimal bigDecimal = new BigDecimal(a).divide(new BigDecimal(b), MathContext.DECIMAL64);
+        BigDecimal result = new BigDecimal(Math.sqrt(bigDecimal.doubleValue()));
+        return new Fraction(result).simplified().approximate(3);
+    }
+
+    public Fraction approximate(int maxIterations) {
+        return approximate(maxIterations, 0.0001, 1000);
+    }
+
+    public Fraction approximate(int maxIterations, double epsilon, int maxDenominator) {
+        if (this.equals(Fraction.ZERO)) return Fraction.ZERO;
+        if (this.getB().equals(BigInteger.ONE)) return this;
+        Fraction remainder = this.subtract(this.floor()).inverse();
+        if (remainder.getB().equals(BigInteger.ONE)) {
+            return this.floor().add(remainder.inverse());
+        }
+        ArrayList<Fraction> xs = new ArrayList<>(maxIterations);
+        xs.add(this.floor());
+        if (approximationEval(xs).subtract(this).abs().compareTo(Fraction.ofDouble(epsilon)) < 0 ||
+                approximationEval(xs).getB().compareTo(BigInteger.valueOf(maxDenominator)) > 0) return approximationEval(xs);
+        xs.add(remainder.floor());
+        if (approximationEval(xs).subtract(this).abs().compareTo(Fraction.ofDouble(epsilon)) < 0 ||
+                approximationEval(xs).getB().compareTo(BigInteger.valueOf(maxDenominator)) > 0) return approximationEval(xs);
+        for (int i = 1; i < maxIterations; i++) {
+            remainder = remainder.subtract(remainder.floor()).inverse();
+            if (remainder.getB().equals(BigInteger.ONE)) break;
+            xs.add(remainder.floor());
+            if (approximationEval(xs).subtract(this).abs().compareTo(Fraction.ofDouble(epsilon)) < 0 ||
+                    approximationEval(xs).getB().compareTo(BigInteger.valueOf(maxDenominator)) > 0) return approximationEval(xs);
+        }
+        return approximationEval(xs);
+    }
+
+    private Fraction approximationEval(ArrayList<Fraction> xs) {
+        Fraction result = xs.get(xs.size() - 1);
+        for (int i = xs.size() - 2; i >= 0; i--) {
+            result = result.inverse().add(xs.get(i));
+        }
+        return result;
+    }
+
+    public Fraction floor() {
+        BigDecimal bigDecimal = new BigDecimal(a).divide(new BigDecimal(b), MathContext.DECIMAL64);
+        return Fraction.ofDouble(Math.floor(bigDecimal.doubleValue()));
     }
 
     public int signum() {

@@ -116,6 +116,21 @@ public class Complex {
         }
     }
 
+    public Complex sqrt() {
+        if (this.im.equals(Fraction.ZERO)) return new Complex(this.re.sqrt(), Fraction.ZERO);
+        Fraction real = this.abs().add(re).divide(Fraction.ofInt(2)).sqrt();
+        Fraction imag = this.abs().subtract(re).divide(Fraction.ofInt(2)).sqrt().multiply(Fraction.ofInt(im.signum()));
+        return new Complex(real, imag);
+    }
+
+    public Complex approximate() {
+        return approximate(10);
+    }
+
+    public Complex approximate(int maxIterations) {
+        return new Complex(re.approximate(maxIterations), im.approximate(maxIterations));
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -163,7 +178,7 @@ public class Complex {
                 if (getAngle().equals(Fraction.ZERO)) {
                     return re.toLatex(formatMode);
                 }
-                return getRadius().toLatex(formatMode) + "∠" + getAngle().toLatex(formatMode);
+                return abs().toLatex(formatMode) + "∠" + getAngle().toLatex(formatMode);
             default:
                 throw new IllegalArgumentException("Unknown mode " + formatMode.getComplexMode());
         }
@@ -187,8 +202,8 @@ public class Complex {
         return im;
     }
 
-    public Fraction getRadius() {
-        return Fraction.ofDouble(Math.hypot(re.toDouble(), im.toDouble()));
+    public Fraction abs() {
+        return re.multiply(re).add(im.multiply(im)).sqrt();
     }
 
     public Fraction getAngle() {

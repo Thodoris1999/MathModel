@@ -16,6 +16,10 @@ public class Polynomial extends Function{
         this.domain = (Complex num) -> true;
     }
 
+    public int degree() {
+        return coefficients.length - 1;
+    }
+
     @Override
     public Polynomial derivative() {
         Complex[] newCoefficients = new Complex[coefficients.length - 1];
@@ -48,6 +52,71 @@ public class Polynomial extends Function{
             sum = sum.add(coefficients[i].multiply(num.toThe(i)));
         }
         return sum;
+    }
+
+    public Polynomial opposite() {
+        Complex[] newCoefficients = new Complex[this.degree() + 1];
+        for (int i = 0; i < newCoefficients.length; i++) {
+            newCoefficients[i] = this.coefficients[i].opposite();
+        }
+        return new Polynomial(newCoefficients);
+    }
+
+    public Polynomial add(Polynomial poly) {
+        int diff = this.degree() - poly.degree();
+        Complex[] newCoefficients = new Complex[diff > 0 ? this.degree() + 1 : poly.degree() + 1];
+        for (int i = 0; i < ((diff > 0) ? poly.degree() + 1 : this.degree() + 1); i++) {
+            newCoefficients[i] = this.coefficients[i].add(poly.coefficients[i]);
+        }
+        for (int i = ((diff > 0) ? poly.degree() + 1 : this.degree() + 1); i < ((diff > 0) ? this.degree() + 1 : poly.degree() + 1); i++) {
+            newCoefficients[i] = diff > 0 ? this.coefficients[i] : poly.coefficients[i];
+        }
+        int numFrontZeros = 0;
+        for (int i = newCoefficients.length - 1; i >= 0; i--) {
+            if (!newCoefficients[i].equals(Complex.ZERO)) break;
+            numFrontZeros++;
+        }
+        Complex[] newCoefficientsNoFrontZeros = new Complex[newCoefficients.length - numFrontZeros];
+        System.arraycopy(newCoefficients, 0, newCoefficientsNoFrontZeros, 0, newCoefficientsNoFrontZeros.length);
+        return new Polynomial(newCoefficientsNoFrontZeros);
+    }
+
+    public Polynomial subtract(Polynomial poly) {
+        return this.add(poly.opposite());
+    }
+
+    public Polynomial multiply(Polynomial poly) {
+        Complex[] newCoefficients = new Complex[poly.degree() + this.degree() + 1];
+        for (int i = 0; i < newCoefficients.length; i++) {
+            newCoefficients[i] = Complex.ZERO;
+        }
+        for (int i = 0; i < poly.degree() + 1; i++) {
+            for (int j = 0; j < this.degree() + 1; j++) {
+                newCoefficients[i + j] = newCoefficients[i + j].add(poly.coefficients[i].multiply(this.coefficients[j]));
+            }
+        }
+        return new Polynomial(newCoefficients);
+    }
+
+    public Polynomial divide(Polynomial poly) {
+        Polynomial res = new Polynomial(Complex.ZERO);
+        Polynomial dividor = this;
+        while (dividor.degree() >= poly.degree()) {
+            int resExp = dividor.degree() - poly.degree();
+            Complex coefficient = dividor.coefficients[dividor.degree()].divide(poly.coefficients[poly.degree()]);
+            Complex[] temp = new Complex[resExp + 1];
+            for (int j = 0; j < temp.length; j++) {
+                temp[j] = j == resExp ? coefficient : Complex.ZERO;
+            }
+            Polynomial tempPol = new Polynomial(temp);
+            res = res.add(tempPol);
+            dividor = dividor.subtract(poly.multiply(tempPol));
+        }
+        return res;
+    }
+
+    public Complex[] getCoefficients() {
+        return coefficients;
     }
 
     @Override
@@ -92,5 +161,19 @@ public class Polynomial extends Function{
             }
         }
         return builder.toString();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (this.getClass() != obj.getClass()) return false;
+        
+        Polynomial other = (Polynomial) obj;
+        if (this.coefficients.length != other.coefficients.length) return false;
+        for (int i = 0; i < coefficients.length; i++) {
+            if (!this.coefficients[i].equals(other.coefficients[i])) return false;
+        }
+        return true;
     }
 }
