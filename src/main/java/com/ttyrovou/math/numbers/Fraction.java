@@ -8,8 +8,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -88,13 +88,12 @@ public class Fraction implements Comparable<Fraction> {
     }
 
     public static Fraction ofDouble(double a) {
-        DecimalFormat decimalFormat = new DecimalFormat("###.#########");
-        String dec = decimalFormat.format(a);
-        if (!dec.contains(".")) return Fraction.ofInt((int) a);
+        String dec = String.format(Locale.US, "%s", a);
         return Fraction.ofDecimalString(dec);
     }
 
     private static Fraction ofDecimalString(String dec) {
+        if (!dec.contains(".")) return Fraction.ofInt(Integer.parseInt(dec));
         String[] splited = dec.split("\\.");
         BigInteger numerator = new BigInteger(dec.replace(".", ""));
         StringBuilder decString = new StringBuilder("1");
