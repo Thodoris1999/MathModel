@@ -124,7 +124,7 @@ public class Complex {
     }
 
     public Complex approximate() {
-        return approximate(10);
+        return approximate(20);
     }
 
     public Complex approximate(int maxIterations) {

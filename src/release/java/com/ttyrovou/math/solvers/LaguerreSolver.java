@@ -71,6 +71,6 @@ public class LaguerreSolver {
     private boolean isSmall(Complex complex) {
         if (complex.equals(Complex.ZERO)) return true;
         Fraction sumSquares = complex.getRe().multiply(complex.getRe()).add(complex.getIm().multiply(complex.getIm()));
-        return sumSquares.getB().bitLength() - sumSquares.getA().bitLength() > 25;
+        return sumSquares.getB().bitLength() - sumSquares.getA().bitLength() > 30;
     }
 }

@@ -1,6 +1,8 @@
 package com.ttyrovou.math.matrix;
 
+import com.ttyrovou.math.functions.Polynomial;
 import com.ttyrovou.math.numbers.Complex;
+import com.ttyrovou.math.solvers.LaguerreSolver;
 import com.ttyrovou.math.utils.NumberFormatMode;
 
 import java.util.Collections;
@@ -294,6 +296,18 @@ public class Matrix {
         return result;
     }
 
+    public Eigen[] eigen() {
+        Polynomial charPol = new Polynomial(this.getCharacteristicPolynomial());
+        LaguerreSolver solver = new LaguerreSolver();
+        Complex[] allRoots = solver.findAllRoots(charPol);
+        Eigen[] eigens = new Eigen[allRoots.length];
+        for (int i = 0; i < allRoots.length; i++) {
+            Matrix mat = this.subtract(Matrix.fromUnit(this.getColCount()).multiply(allRoots[i].opposite())).addColumn();
+            eigens[i] = new Eigen(allRoots[i], mat.linearSystemSolution(), charPol.eval(allRoots[i]).equals(Complex.ZERO));
+        }
+        return eigens;
+    }
+
     public void swapRows(int rowIndex1, int rowIndex2) {
         Collections.swap(this.elements, rowIndex1, rowIndex2);
     }
@@ -322,6 +336,10 @@ public class Matrix {
             clone.elements.get(i).remove(index);
         }
         return clone;
+    }
+
+    public Matrix addColumn() {
+        return this.addColumn(getColCount());
     }
 
     public Matrix addColumn(int index) {

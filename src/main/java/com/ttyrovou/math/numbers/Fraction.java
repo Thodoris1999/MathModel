@@ -8,8 +8,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -88,12 +89,16 @@ public class Fraction implements Comparable<Fraction> {
     }
 
     public static Fraction ofDouble(double a) {
-        String dec = String.format(Locale.US, "%s", a);
-        return Fraction.ofDecimalString(dec);
+        DecimalFormat df = new DecimalFormat();
+        DecimalFormatSymbols dfs = DecimalFormatSymbols.getInstance();
+        dfs.setGroupingSeparator('.');
+        df.setMinimumFractionDigits(16);
+        df.setDecimalFormatSymbols(dfs);
+        return Fraction.ofDecimalString(df.format(a));
     }
 
     private static Fraction ofDecimalString(String dec) {
-        if (!dec.contains(".")) return Fraction.ofInt(Integer.parseInt(dec));
+        if (!dec.contains(".") && !dec.contains(",")) return Fraction.ofInt(Integer.parseInt(dec));
         String[] splited = dec.split("\\.");
         BigInteger numerator = new BigInteger(dec.replace(".", ""));
         StringBuilder decString = new StringBuilder("1");
@@ -167,7 +172,7 @@ public class Fraction implements Comparable<Fraction> {
     }
 
     public Fraction approximate(int maxIterations) {
-        return approximate(maxIterations, 0.0001, 1000);
+        return approximate(maxIterations, 0.0000001, 1000);
     }
 
     public Fraction approximate(int maxIterations, double epsilon, int maxDenominator) {

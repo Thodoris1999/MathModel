@@ -305,7 +305,7 @@ public class Matrix {
         Complex[] allRoots = solver.findAllRoots(charPol);
         Eigen[] eigens = new Eigen[allRoots.length];
         for (int i = 0; i < allRoots.length; i++) {
-            Matrix mat = this.subtract(Matrix.fromUnit(this.getColCount()).multiply(allRoots[i].opposite()));
+            Matrix mat = this.subtract(Matrix.fromUnit(this.getColCount()).multiply(allRoots[i].opposite())).addColumn();
             eigens[i] = new Eigen(allRoots[i], mat.linearSystemSolution(), charPol.eval(allRoots[i]).equals(Complex.ZERO));
         }
         return eigens;
@@ -339,6 +339,10 @@ public class Matrix {
             clone.elements.get(i).remove(index);
         }
         return clone;
+    }
+
+    public Matrix addColumn() {
+        return this.addColumn(getColCount());
     }
 
     public Matrix addColumn(int index) {
