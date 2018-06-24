@@ -1,8 +1,6 @@
 package com.ttyrovou.math.numbers;
 
-import com.ttyrovou.math.utils.NumberFormatMode;
-import com.ttyrovou.math.utils.NumberFormatModeBuilder;
-import com.ttyrovou.math.utils.NumberUtils;
+import com.ttyrovou.math.utils.*;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -10,7 +8,6 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -164,47 +161,10 @@ public class Fraction implements Comparable<Fraction> {
     }
 
     public Fraction sqrt() {
-        Fraction approximation = this.approximate(100);
-        if (approximation.equals(Fraction.ZERO)) return Fraction.ZERO;
         BigDecimal bigDecimal = new BigDecimal(a).divide(new BigDecimal(b), MathContext.DECIMAL64);
         BigDecimal result = new BigDecimal(Math.sqrt(bigDecimal.doubleValue()));
-        return new Fraction(result).simplified().approximate(3);
-    }
-
-    public Fraction approximate(int maxIterations) {
-        return approximate(maxIterations, 0.0000001, 1000);
-    }
-
-    public Fraction approximate(int maxIterations, double epsilon, int maxDenominator) {
-        if (this.equals(Fraction.ZERO)) return Fraction.ZERO;
-        if (this.getB().equals(BigInteger.ONE)) return this;
-        Fraction remainder = this.subtract(this.floor()).inverse();
-        if (remainder.getB().equals(BigInteger.ONE)) {
-            return this.floor().add(remainder.inverse());
-        }
-        ArrayList<Fraction> xs = new ArrayList<>(maxIterations);
-        xs.add(this.floor());
-        if (approximationEval(xs).subtract(this).abs().compareTo(Fraction.ofDouble(epsilon)) < 0 ||
-                approximationEval(xs).getB().compareTo(BigInteger.valueOf(maxDenominator)) > 0) return approximationEval(xs);
-        xs.add(remainder.floor());
-        if (approximationEval(xs).subtract(this).abs().compareTo(Fraction.ofDouble(epsilon)) < 0 ||
-                approximationEval(xs).getB().compareTo(BigInteger.valueOf(maxDenominator)) > 0) return approximationEval(xs);
-        for (int i = 1; i < maxIterations; i++) {
-            remainder = remainder.subtract(remainder.floor()).inverse();
-            if (remainder.getB().equals(BigInteger.ONE)) break;
-            xs.add(remainder.floor());
-            if (approximationEval(xs).subtract(this).abs().compareTo(Fraction.ofDouble(epsilon)) < 0 ||
-                    approximationEval(xs).getB().compareTo(BigInteger.valueOf(maxDenominator)) > 0) return approximationEval(xs);
-        }
-        return approximationEval(xs);
-    }
-
-    private Fraction approximationEval(ArrayList<Fraction> xs) {
-        Fraction result = xs.get(xs.size() - 1);
-        for (int i = xs.size() - 2; i >= 0; i--) {
-            result = result.inverse().add(xs.get(i));
-        }
-        return result;
+        Approximator approximator = new ApproximatorBuilder().epsilon(0.0000001).build();
+        return approximator.approximate(new Fraction(result));
     }
 
     public Fraction floor() {
@@ -237,7 +197,7 @@ public class Fraction implements Comparable<Fraction> {
 
     @Override
     public int compareTo(Fraction fraction) {
-        return a.multiply(fraction.getB()).subtract(b.multiply(fraction.getA())).intValue();
+        return a.multiply(fraction.getB()).subtract(b.multiply(fraction.getA())).signum();
     }
 
     public String toLatex(NumberFormatMode formatMode) {

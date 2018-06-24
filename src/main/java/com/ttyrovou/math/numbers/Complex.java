@@ -123,14 +123,6 @@ public class Complex {
         return new Complex(real, imag);
     }
 
-    public Complex approximate() {
-        return approximate(20);
-    }
-
-    public Complex approximate(int maxIterations) {
-        return new Complex(re.approximate(maxIterations), im.approximate(maxIterations));
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

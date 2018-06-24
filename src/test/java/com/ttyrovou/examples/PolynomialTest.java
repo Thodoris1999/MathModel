@@ -50,4 +50,12 @@ public class PolynomialTest {
         assertTrue(Arrays.asList(allRoots).contains(Complex.ofInt(2)));
         assertTrue(Arrays.asList(allRoots).contains(Complex.ZERO));
     }
+
+    @Test
+    public void findRoots2() {
+        Polynomial pol = new Polynomial(Complex.ZERO, Complex.ofInt(-43), Complex.ofInt(-6), Complex.ofInt(1));
+        LaguerreSolver solver = new LaguerreSolver();
+        Complex[] allRoots = solver.findAllRoots(pol);
+        System.out.println(Arrays.toString(allRoots));
+    }
 }

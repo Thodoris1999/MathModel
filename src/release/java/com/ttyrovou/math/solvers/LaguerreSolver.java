@@ -3,6 +3,8 @@ package com.ttyrovou.math.solvers;
 import com.ttyrovou.math.functions.Polynomial;
 import com.ttyrovou.math.numbers.Complex;
 import com.ttyrovou.math.numbers.Fraction;
+import com.ttyrovou.math.utils.Approximator;
+import com.ttyrovou.math.utils.ApproximatorBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +30,7 @@ public class LaguerreSolver {
     }
 
     public Optional<Complex> findRoot(Polynomial poly) {
-        int iterations = 50;;
+        int iterations = 50;
         Complex guess = Complex.ZERO;
 
         Polynomial firstDer = poly.derivative();
@@ -36,7 +38,8 @@ public class LaguerreSolver {
 
         for (int i = 0; i < iterations; i++) {
             if (isSmall(poly.eval(guess))) {
-                return Optional.of(guess.approximate());
+                Approximator approximator = new ApproximatorBuilder().maxDenominator(1000).build();
+                return Optional.of(approximator.approximate(guess));
             }
             Complex g = firstDer.eval(guess).divide(poly.eval(guess));
             Complex h = g.multiply(g).subtract(secondDer.eval(guess).divide(poly.eval(guess)));
