@@ -58,4 +58,12 @@ public class PolynomialTest {
         Complex[] allRoots = solver.findAllRoots(pol);
         System.out.println(Arrays.toString(allRoots));
     }
+
+    @Test
+    public void findRoots3() {
+        Polynomial pol = new Polynomial(Complex.ofInt(-90), Complex.ofInt(73), Complex.ofInt(-16), Complex.ofInt(1));
+        LaguerreSolver solver = new LaguerreSolver();
+        Complex[] allRoots = solver.findAllRoots(pol);
+        System.out.println(Arrays.toString(allRoots));
+    }
 }

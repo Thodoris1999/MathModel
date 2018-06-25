@@ -42,6 +42,7 @@ public class Approximator {
 
         for (int i = 1; i < maxIterations; i++) {
             remainder = remainder.subtract(remainder.floor()).inverse();
+            NumberFormatMode nfm = new NumberFormatModeBuilder().withDecimalMode(NumberFormatMode.DECIMAL_FORM).build();
             if (remainder.getB().equals(BigInteger.ONE)) break;
             xs.add(remainder.floor());
             if (approximationEval(xs).subtract(f).abs().compareTo(epsilon) < 0 ||
