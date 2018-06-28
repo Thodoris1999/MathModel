@@ -1,5 +1,6 @@
 package com.ttyrovou.examples;
 
+import com.ttyrovou.math.matrix.Eigen;
 import com.ttyrovou.math.matrix.Matrix;
 import com.ttyrovou.math.numbers.Complex;
 import com.ttyrovou.math.numbers.Fraction;
@@ -131,8 +132,23 @@ public class MatrixTest {
         long time = System.nanoTime();
         Matrix[] lu = mat.luDecomposition();
         long elapsed = System.nanoTime() - time;
-        System.out.println(elapsed);
+        System.out.println("LU decomposition: " + elapsed);
         Assert.assertEquals(lu[0], lu1);
         Assert.assertEquals(lu[1], lu2);
+    }
+
+    @Test
+    public void eigen() {
+        Complex[][] co1 = {{Complex.ofInt(1), Complex.ZERO, Complex.ZERO},
+                {Complex.ZERO, Complex.ofInt(1), Complex.ZERO},
+                {Complex.ofInt(2), Complex.ZERO, Complex.ofInt(1)}};
+        Matrix mat = new Matrix(co1);
+        long time = System.nanoTime();
+        Eigen[] eigens = mat.eigen().getEigens();
+        long elapsed = System.nanoTime() - time;
+        System.out.println("Eigen: " + elapsed);
+        System.out.println(eigens[0].getEigenspace());
+        System.out.println(eigens.length);
+        System.out.println(eigens[0].getAlgebraicMultiplicity());
     }
 }

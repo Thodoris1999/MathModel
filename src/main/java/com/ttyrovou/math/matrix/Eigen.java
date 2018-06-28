@@ -6,18 +6,20 @@ import java.util.LinkedList;
 
 public class Eigen {
 
-    private Complex eigenValue;
+    private Complex eigenvalue;
     private LinkedList<LinkedList<Complex>> eigenspace;
     private boolean exact;
+    private int algebraicMultiplicity;
 
-    public Eigen(Complex eigenValue, LinkedList<LinkedList<Complex>> eigenspace, boolean exact) {
-        this.eigenValue = eigenValue;
+    public Eigen(Complex eigenvalue, LinkedList<LinkedList<Complex>> eigenspace, boolean exact) {
+        this.eigenvalue = eigenvalue;
         this.eigenspace = eigenspace;
         this.exact = exact;
+        this.algebraicMultiplicity = 1;
     }
 
-    public Complex getEigenValue() {
-        return eigenValue;
+    public Complex getEigenvalue() {
+        return eigenvalue;
     }
 
     public LinkedList<LinkedList<Complex>> getEigenspace() {
@@ -26,5 +28,13 @@ public class Eigen {
 
     public boolean isExact() {
         return exact;
+    }
+
+    public int getAlgebraicMultiplicity() {
+        return algebraicMultiplicity;
+    }
+
+    public void incrementAlgebraicMultiplicity() {
+        algebraicMultiplicity++;
     }
 }

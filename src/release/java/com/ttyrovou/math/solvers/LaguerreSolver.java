@@ -38,7 +38,7 @@ public class LaguerreSolver {
 
         for (int i = 0; i < iterations; i++) {
             if (isSmall(poly.eval(guess))) {
-                Approximator approximator = new ApproximatorBuilder().maxDenominator(1000).build();
+                Approximator approximator = new ApproximatorBuilder().maxDenominator(10000).build();
                 return Optional.of(approximator.approximate(guess));
             }
             Complex g = firstDer.eval(guess).divide(poly.eval(guess));

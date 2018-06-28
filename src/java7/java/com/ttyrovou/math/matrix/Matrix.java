@@ -3,8 +3,10 @@ package com.ttyrovou.math.matrix;
 import com.ttyrovou.math.functions.Polynomial;
 import com.ttyrovou.math.numbers.Complex;
 import com.ttyrovou.math.solvers.LaguerreSolver;
+import com.ttyrovou.math.utils.EigenDto;
 import com.ttyrovou.math.utils.NumberFormatMode;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -299,16 +301,27 @@ public class Matrix {
         return result;
     }
 
-    public Eigen[] eigen() {
+    public EigenDto eigen() {
         Polynomial charPol = new Polynomial(this.getCharacteristicPolynomial());
         LaguerreSolver solver = new LaguerreSolver();
         Complex[] allRoots = solver.findAllRoots(charPol);
-        Eigen[] eigens = new Eigen[allRoots.length];
-        for (int i = 0; i < allRoots.length; i++) {
-            Matrix mat = this.subtract(Matrix.fromUnit(this.getColCount()).multiply(allRoots[i].opposite())).addColumn();
-            eigens[i] = new Eigen(allRoots[i], mat.linearSystemSolution(), charPol.eval(allRoots[i]).equals(Complex.ZERO));
+        ArrayList<Eigen> eigens = new ArrayList<>(allRoots.length);
+        for (Complex allRoot : allRoots) {
+            int eigenIndex = -1;
+            for (int j = 0; j < eigens.size(); j++) {
+                if (eigens.get(j).getEigenvalue().equals(allRoot)) {
+                    eigenIndex = j;
+                    break;
+                }
+            }
+            if (eigenIndex != -1) {
+                eigens.get(eigenIndex).incrementAlgebraicMultiplicity();
+            } else {
+                Matrix mat = this.subtract(Matrix.fromUnit(this.getColCount()).multiply(allRoot)).addColumn();
+                eigens.add(new Eigen(allRoot, mat.linearSystemSolution(), charPol.eval(allRoot).equals(Complex.ZERO)));
+            }
         }
-        return eigens;
+        return new EigenDto(eigens.toArray(new Eigen[0]), charPol);
     }
 
     public void swapRows(int rowIndex1, int rowIndex2) {
