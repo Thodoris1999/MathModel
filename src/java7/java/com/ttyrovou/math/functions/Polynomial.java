@@ -2,6 +2,7 @@ package com.ttyrovou.math.functions;
 
 import com.ttyrovou.math.numbers.Complex;
 import com.ttyrovou.math.numbers.Fraction;
+import com.ttyrovou.math.utils.NumberFormatMode;
 
 public class Polynomial extends Function {
 
@@ -148,8 +149,50 @@ public class Polynomial extends Function {
                         .append(i);
             } else {
                 builder.append((coefficients[i].getRe().signum() > 0 ||
-                        (coefficients[i].getRe().signum() == 0 || coefficients[i].getIm().signum() >= 0))  ? "+" : "")
+                        (coefficients[i].getRe().signum() == 0 && coefficients[i].getIm().signum() > 0)) ? "+" : "")
                         .append(coefficients[i]);
+            }
+        }
+        return builder.toString();
+    }
+
+    public String toLatex(NumberFormatMode formatMode) {
+        StringBuilder builder = new StringBuilder("f(λ)=");
+        for (int i = coefficients.length - 1; i >= 0; i--) {
+            if (coefficients[i].equals(Complex.ZERO) && i != coefficients.length - 1) {
+                continue;
+            }
+            if (i != 0 && i != coefficients.length - 1 && i != 1) {
+                if (!(coefficients[i].getIm().equals(Fraction.ZERO) || coefficients[i].getRe().equals(Fraction.ZERO))) {
+                    builder.append("+(")
+                            .append(coefficients[i].toLatex(formatMode))
+                            .append(")")
+                            .append("λ^")
+                            .append(i);
+                } else {
+                    builder.append((coefficients[i].getRe().signum() > 0 || coefficients[i].getIm().signum() > 0) ? "+" : "")
+                            .append(coefficients[i].toLatex(formatMode))
+                            .append("λ^")
+                            .append(i);
+                }
+            } else if (i == 1) {
+                if (!(coefficients[i].getIm().equals(Fraction.ZERO) || coefficients[i].getRe().equals(Fraction.ZERO))) {
+                    builder.append("+(")
+                            .append(coefficients[i].toLatex(formatMode))
+                            .append(")")
+                            .append("λ");
+                } else {
+                    builder.append((coefficients[i].getRe().signum() > 0 || coefficients[i].getIm().signum() > 0) ? "+" : "")
+                            .append(coefficients[i].toLatex(formatMode))
+                            .append("λ");
+                }
+            } else if (i == coefficients.length - 1) {
+                builder.append("λ^")
+                        .append(i);
+            } else {
+                builder.append((coefficients[i].getRe().signum() > 0 ||
+                        (coefficients[i].getRe().signum() == 0 && coefficients[i].getIm().signum() > 0)) ? "+" : "")
+                        .append(coefficients[i].toLatex(formatMode));
             }
         }
         return builder.toString();
