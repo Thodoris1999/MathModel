@@ -7,7 +7,7 @@ public class FractionTest {
 
     @Test
     public void decimalFraction() {
-        Fraction f = Fraction.ofDouble(Math.PI);
+        Fraction f = Fraction.ofDouble(10001.0000001);
         System.out.println(f);
     }
 }

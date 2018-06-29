@@ -7,6 +7,8 @@ import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -86,8 +88,11 @@ public class Fraction implements Comparable<Fraction> {
 
     public static Fraction ofDouble(double a) {
         DecimalFormat df = new DecimalFormat();
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
+        symbols.setDecimalSeparator('.');
         df.setGroupingUsed(false);
         df.setMinimumFractionDigits(16);
+        df.setDecimalFormatSymbols(symbols);
         return Fraction.ofDecimalString(df.format(a));
     }
 
