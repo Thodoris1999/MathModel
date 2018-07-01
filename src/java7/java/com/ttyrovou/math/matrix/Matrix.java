@@ -91,22 +91,20 @@ public class Matrix {
     }
 
     public Matrix add(Matrix matrix) {
-        if (this.getColCount() == matrix.getColCount() && this.getRowCount() == matrix.getRowCount()) {
-            LinkedList<LinkedList<Complex>> resultElements = new LinkedList<>();
-            for (int i = 0; i < getRowCount(); i++) {
-                resultElements.add(new LinkedList<>());
-                for (int j = 0; j < getColCount(); j++) {
-                    resultElements.get(i).add(this.get(i, j).add(matrix.get(i, j)));
-                }
+        if (this.getColCount() != matrix.getColCount() || this.getRowCount() != matrix.getRowCount())
+            throw new UnsupportedOperationException("Atteampting to subtract matrices of non equal dimensions");
+        LinkedList<LinkedList<Complex>> resultElements = new LinkedList<>();
+        for (int i = 0; i < getRowCount(); i++) {
+            resultElements.add(new LinkedList<>());
+            for (int j = 0; j < getColCount(); j++) {
+                resultElements.get(i).add(this.get(i, j).add(matrix.get(i, j)));
             }
-            return new Matrix(resultElements);
-        } else {
-            throw new UnsupportedOperationException("Atteampting to add matrices of non equal dimensions");
         }
+        return new Matrix(resultElements);
     }
 
     public Matrix subtract(Matrix matrix) {
-        if (this.getColCount() != matrix.getColCount() && this.getRowCount() == matrix.getRowCount())
+        if (this.getColCount() != matrix.getColCount() || this.getRowCount() != matrix.getRowCount())
             throw new UnsupportedOperationException("Atteampting to subtract matrices of non equal dimensions");
         LinkedList<LinkedList<Complex>> resultElements = new LinkedList<>();
         for (int i = 0; i < getRowCount(); i++) {
