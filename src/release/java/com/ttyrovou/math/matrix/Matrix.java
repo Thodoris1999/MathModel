@@ -89,7 +89,7 @@ public class Matrix {
 
     public Matrix add(Matrix matrix) {
         if (this.getColCount() != matrix.getColCount() || this.getRowCount() != matrix.getRowCount())
-            throw new UnsupportedOperationException("Atteampting to subtract matrices of non equal dimensions");
+            throw new UnsupportedOperationException("Atteampting to add matrices of non equal dimensions");
         LinkedList<LinkedList<Complex>> resultElements = new LinkedList<>();
         for (int i = 0; i < getRowCount(); i++) {
             resultElements.add(new LinkedList<>());
