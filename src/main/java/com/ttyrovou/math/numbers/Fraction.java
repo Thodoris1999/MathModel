@@ -32,7 +32,7 @@ public class Fraction implements Comparable<Fraction> {
     }
 
     public Fraction(BigDecimal decimal) {
-        String toString = decimal.toString();
+        String toString = decimal.toPlainString();
         if (toString.contains(".")) {
             this.a = ofDecimalString(toString).getA();
             this.b = ofDecimalString(toString).getB();
