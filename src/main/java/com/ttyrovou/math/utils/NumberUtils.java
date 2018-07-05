@@ -4,7 +4,11 @@ import java.math.BigInteger;
 
 public class NumberUtils {
     public static BigInteger gcd(BigInteger a, BigInteger b){
-        if(b.signum() == 0) return a; // base case
-        return gcd(b, a.remainder(b));
+        while (b.equals(BigInteger.ZERO)) {
+            BigInteger t = b;
+            b = a.mod(b);
+            a = t;
+        }
+        return a;
     }
 }
