@@ -117,9 +117,9 @@ public class Complex {
     }
 
     public Complex sqrt() {
-        if (this.im.equals(Fraction.ZERO)) return new Complex(this.re.sqrt(), Fraction.ZERO);
-        Fraction real = this.abs().add(re).divide(Fraction.ofInt(2)).sqrt();
-        Fraction imag = this.abs().subtract(re).divide(Fraction.ofInt(2)).sqrt().multiply(Fraction.ofInt(im.signum()));
+        if (this.im.equals(Fraction.ZERO)) return this.re.sqrt();
+        Fraction real = this.abs().add(re).divide(Fraction.ofInt(2)).sqrtOrThrow();
+        Fraction imag = this.abs().subtract(re).divide(Fraction.ofInt(2)).sqrtOrThrow().multiply(Fraction.ofInt(im.signum()));
         return new Complex(real, imag);
     }
 
@@ -195,7 +195,7 @@ public class Complex {
     }
 
     public Fraction abs() {
-        return re.multiply(re).add(im.multiply(im)).sqrt();
+        return re.multiply(re).add(im.multiply(im)).sqrtOrThrow();
     }
 
     public Fraction getAngle() {

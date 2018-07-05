@@ -7,6 +7,8 @@ import com.ttyrovou.math.numbers.Fraction;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 public class MatrixTest {
     @Test
     public void complexAddition() {
@@ -147,6 +149,22 @@ public class MatrixTest {
         Eigen[] eigens = mat.eigen().getEigens();
         long elapsed = System.nanoTime() - time;
         System.out.println("Eigen: " + elapsed);
+        Arrays.stream(eigens).map(Eigen::getEigenvalue).forEach(System.out::println);
+        System.out.println(eigens[0].getEigenspace());
+        System.out.println(eigens.length);
+        System.out.println(eigens[0].getAlgebraicMultiplicity());
+    }
+
+    @Test
+    public void eigen2() {
+        Complex[][] co1 = {{new Complex(Fraction.ofInt(9), Fraction.ofInt(2)), Complex.ofInt(-1)},
+                {Complex.ofInt(-1), new Complex(Fraction.ofInt(9), Fraction.ofInt(-4))}};
+        Matrix mat = new Matrix(co1);
+        long time = System.nanoTime();
+        Eigen[] eigens = mat.eigen().getEigens();
+        long elapsed = System.nanoTime() - time;
+        System.out.println("Eigen2: " + elapsed);
+        Arrays.stream(eigens).map(Eigen::getEigenvalue).forEach(System.out::println);
         System.out.println(eigens[0].getEigenspace());
         System.out.println(eigens.length);
         System.out.println(eigens[0].getAlgebraicMultiplicity());

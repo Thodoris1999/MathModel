@@ -162,10 +162,24 @@ public class Fraction implements Comparable<Fraction> {
         }
     }
 
-    public Fraction sqrt() {
+    public Complex sqrt() {
+        Approximator approximator = new ApproximatorBuilder().epsilon(0.0000001).build();
+        if (this.signum() < 0) {
+            BigDecimal bigDecimal = new BigDecimal(a.abs()).divide(new BigDecimal(b.abs()), MathContext.DECIMAL64);
+            BigDecimal result = new BigDecimal(Math.sqrt(bigDecimal.doubleValue()));
+            return approximator.approximate(new Complex(Fraction.ZERO, new Fraction(result)));
+        } else {
+            BigDecimal bigDecimal = new BigDecimal(a).divide(new BigDecimal(b), MathContext.DECIMAL64);
+            BigDecimal result = new BigDecimal(Math.sqrt(bigDecimal.doubleValue()));
+            return approximator.approximate(new Complex(new Fraction(result), Fraction.ZERO));
+        }
+    }
+
+    public Fraction sqrtOrThrow() {
+        if (this.signum() < 0) throw new UnsupportedOperationException("square root of negative number");
+        Approximator approximator = new ApproximatorBuilder().epsilon(0.0000001).build();
         BigDecimal bigDecimal = new BigDecimal(a).divide(new BigDecimal(b), MathContext.DECIMAL64);
         BigDecimal result = new BigDecimal(Math.sqrt(bigDecimal.doubleValue()));
-        Approximator approximator = new ApproximatorBuilder().epsilon(0.0000001).build();
         return approximator.approximate(new Fraction(result));
     }
 
