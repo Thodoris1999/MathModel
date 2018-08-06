@@ -19,7 +19,7 @@ public class Fraction implements Comparable<Fraction> {
     private static final int NUMERATOR_GROUP = 1;
     private static final int DENOMINATOR_GROUP = 3;
     private static final Pattern fractionPattern = Pattern.compile("^([+-]?\\d+)(\\/([+-]?\\d+))?$");
-    private static final Pattern decimalPattern = Pattern.compile("^\\d+\\.\\d+$");
+    private static final Pattern decimalPattern = Pattern.compile("^[+-]?\\d+\\.\\d+$");
 
     private BigInteger a, b;
 
