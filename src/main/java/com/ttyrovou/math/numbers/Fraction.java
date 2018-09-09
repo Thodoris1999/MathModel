@@ -53,24 +53,30 @@ public class Fraction implements Comparable<Fraction> {
     }
 
     public Fraction(String s) {
-        Matcher fractionMatcher = fractionPattern.matcher(s);
-        Matcher decimalMatcher = decimalPattern.matcher(s);
-        if (fractionMatcher.matches()) {
-            this.a = new BigInteger(s.substring(fractionMatcher.start(NUMERATOR_GROUP), fractionMatcher.end(NUMERATOR_GROUP)));
-            if (fractionMatcher.start(DENOMINATOR_GROUP) > 0) {
-                this.b = new BigInteger(s.substring(fractionMatcher.start(DENOMINATOR_GROUP), fractionMatcher.end(DENOMINATOR_GROUP)));
+        try {
+            Matcher fractionMatcher = fractionPattern.matcher(s);
+            Matcher decimalMatcher = decimalPattern.matcher(s);
+            if (fractionMatcher.matches()) {
+                this.a = new BigInteger(s.substring(fractionMatcher.start(NUMERATOR_GROUP), fractionMatcher.end(NUMERATOR_GROUP)));
+                if (fractionMatcher.start(DENOMINATOR_GROUP) > 0) {
+                    this.b = new BigInteger(s.substring(fractionMatcher.start(DENOMINATOR_GROUP), fractionMatcher.end(DENOMINATOR_GROUP)));
+                } else {
+                    this.b = BigInteger.ONE;
+                }
+            } else if (decimalMatcher.matches()) {
+                this.a = Fraction.ofDecimalString(s).getA();
+                this.b = Fraction.ofDecimalString(s).getB();
             } else {
-                this.b = BigInteger.ONE;
+                throw new NumberFormatException("Fraction not formatted properly.");
             }
-        } else if (decimalMatcher.matches()) {
-            this.a = Fraction.ofDecimalString(s).getA();
-            this.b = Fraction.ofDecimalString(s).getB();
-        } else {
-            throw new NumberFormatException("Fraction not formatted properly.");
-        }
 
-        if (b.equals(new BigInteger("0"))) {
-            throw new ArithmeticException("Fraction cannot have zero as denominator");
+            if (b.equals(new BigInteger("0"))) {
+                throw new ArithmeticException("Fraction cannot have zero as denominator");
+            }
+            if (a == null || b == null) throw new NumberFormatException("Fraction part was found null");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new NumberFormatException("Failed to parse fraction");
         }
     }
 

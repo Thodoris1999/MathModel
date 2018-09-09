@@ -15,39 +15,45 @@ public class Complex {
     }
 
     public Complex(String s) {
-        if (s.contains("i")) { //NON-NLS
-            if (s.indexOf("i") != s.length() - 1) {
-                throw new NumberFormatException("Multiple 'i's or text after 'i'");
-            }
-            //find complex part separator
-            char[] charArray = s.toCharArray();
-            int separatorIndex = 0;
-            for (int i = charArray.length - 1; i > 0; i--) {
-                if ((charArray[i] == '+' || charArray[i] == '-') && charArray[i - 1] != '/') {
-                    separatorIndex = i;
-                    break;
+        try {
+            if (s.contains("i")) { //NON-NLS
+                if (s.indexOf("i") != s.length() - 1) {
+                    throw new NumberFormatException("Multiple 'i's or text after 'i'");
                 }
-            }
-            if (separatorIndex == 0) {
-                this.re = Fraction.ZERO;
+                //find complex part separator
+                char[] charArray = s.toCharArray();
+                int separatorIndex = 0;
+                for (int i = charArray.length - 1; i > 0; i--) {
+                    if ((charArray[i] == '+' || charArray[i] == '-') && charArray[i - 1] != '/') {
+                        separatorIndex = i;
+                        break;
+                    }
+                }
+                if (separatorIndex == 0) {
+                    this.re = Fraction.ZERO;
+                } else {
+                    this.re = new Fraction(s.substring(0, separatorIndex));
+                }
+                this.im = parseImPart(s.substring(separatorIndex));
+            } else if (s.contains("∠")) {
+                String[] splited = s.split("∠");
+                if (splited.length == 2) {
+                    Fraction radius = new Fraction(splited[0]);
+                    Fraction angle = new Fraction(splited[1]);
+                    System.out.println(Math.cos(angle.toDouble()));
+                    this.re = radius.multiply(Fraction.ofDouble(Math.cos(angle.toDouble())));
+                    this.im = radius.multiply(Fraction.ofDouble(Math.sin(angle.toDouble())));
+                } else {
+                    throw new NumberFormatException("Wrong use of \"∠\"");
+                }
             } else {
-                this.re = new Fraction(s.substring(0, separatorIndex));
+                this.im = Fraction.ZERO;
+                this.re = new Fraction(s);
             }
-            this.im = parseImPart(s.substring(separatorIndex));
-        } else if (s.contains("∠")) {
-            String[] splited = s.split("∠");
-            if (splited.length == 2) {
-                Fraction radius = new Fraction(splited[0]);
-                Fraction angle = new Fraction(splited[1]);
-                System.out.println(Math.cos(angle.toDouble()));
-                this.re = radius.multiply(Fraction.ofDouble(Math.cos(angle.toDouble())));
-                this.im = radius.multiply(Fraction.ofDouble(Math.sin(angle.toDouble())));
-            } else {
-                throw new NumberFormatException("Wrong use of \"∠\"");
-            }
-        } else {
-            this.im = Fraction.ZERO;
-            this.re = new Fraction(s);
+            if (re == null || im == null) throw new NumberFormatException("Complex part was found null");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new NumberFormatException("Failed to parse complex number");
         }
     }
 
