@@ -234,7 +234,7 @@ public class Fraction implements Comparable<Fraction> {
                     BigDecimal decB = new BigDecimal(b);
                     MathContext mc = new MathContext(formatMode.getDecimalAccuracy(), RoundingMode.HALF_UP);
                     BigDecimal num = decA.divide(decB, mc);
-                    return num.toString();
+                    return num.toPlainString();
                 case NumberFormatMode.FRACTIONAL_FORM:
                     if (this.signum() == 1) {
                         return "\\frac{" + a.abs().toString() + "}{" + b.abs().toString() + "}";
