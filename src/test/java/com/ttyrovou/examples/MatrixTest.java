@@ -169,4 +169,19 @@ public class MatrixTest {
         System.out.println(eigens.length);
         System.out.println(eigens[0].getAlgebraicMultiplicity());
     }
+
+    @Test
+    public void power() {
+        Complex[][] co1 = {{Complex.ofInt(1), Complex.ofInt(2)},
+                {Complex.ofInt(3), Complex.ofInt(4)}};
+        Complex[][] exp = {{Complex.ofInt(199), Complex.ofInt(290)},
+                {Complex.ofInt(435), Complex.ofInt(634)}};
+        Matrix mat = new Matrix(co1);
+        Matrix expe = new Matrix(exp);
+        long time = System.nanoTime();
+        Matrix result = mat.power(4);
+        long elapsed = System.nanoTime() - time;
+        System.out.println("4th power time: " + elapsed);
+        Assert.assertEquals(expe, result);
+    }
 }

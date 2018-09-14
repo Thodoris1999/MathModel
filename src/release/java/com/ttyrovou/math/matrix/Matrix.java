@@ -138,6 +138,20 @@ public class Matrix {
         return result;
     }
 
+    public Matrix power(int n) {
+        if (this.getColCount() != this.getRowCount())
+            throw new UnsupportedOperationException("Attempting to get the power of a non square matrix");
+        if (n >= 0) {
+            Matrix result = Matrix.fromUnit(this.getRowCount());
+            for (int i = 0; i < n; i++) {
+                result = result.multiply(this);
+            }
+            return result;
+        } else {
+            return this.inverse().power(-n);
+        }
+    }
+
     public Complex det() {
         if (this.getColCount() != this.getRowCount())
             throw new UnsupportedOperationException("Attempting to get the determinant of a non square matrix");
