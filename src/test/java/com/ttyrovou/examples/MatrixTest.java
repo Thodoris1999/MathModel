@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 
 public class MatrixTest {
     @Test
@@ -168,6 +169,16 @@ public class MatrixTest {
         System.out.println(eigens[0].getEigenspace());
         System.out.println(eigens.length);
         System.out.println(eigens[0].getAlgebraicMultiplicity());
+    }
+
+    @Test
+    public void linearSystemNoSolutions() {
+        Complex[][] noSolMatNums = {{Complex.ofInt(2), Complex.ZERO, Complex.ofInt(3), Complex.ofInt(3)},
+                {Complex.ofInt(4), Complex.ofInt(-3), Complex.ofInt(7), Complex.ofInt(5)},
+                {Complex.ofInt(8), Complex.ofInt(-9), Complex.ofInt(15), Complex.ofInt(10)}};
+        Matrix noSolMat = new Matrix(noSolMatNums);
+        LinkedList<LinkedList<Complex>> sol = noSolMat.linearSystemSolution();
+        Assert.assertTrue(sol.isEmpty());
     }
 
     @Test

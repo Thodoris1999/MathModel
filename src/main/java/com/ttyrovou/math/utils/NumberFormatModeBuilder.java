@@ -7,12 +7,14 @@ public class NumberFormatModeBuilder {
     private static final int DEFAULT_DECIMAL_MODE = NumberFormatMode.AUTO;
     private static final int DEFAULT_COMPLEX_MODE = NumberFormatMode.CARTESIAN_FORM;
     private static final int DEFAULT_MATRIX_ENCLOSURES = NumberFormatMode.PARENTHESIS;
+    private static final int DEFAULT_ANGLE_UNIT = NumberFormatMode.RADIANS;
 
     private int fractionThreshold = DEFAULT_FRACTION_THRESHOLD;
     private int decimalAccuracy = DEFAULT_DECIMAL_ACCURACY;
     private int decimalMode = DEFAULT_DECIMAL_MODE;
     private int complexMode = DEFAULT_COMPLEX_MODE;
     private int matrixEnclosures = DEFAULT_MATRIX_ENCLOSURES;
+    private int angleUnit = DEFAULT_ANGLE_UNIT;
 
     public NumberFormatModeBuilder withDecimalMode(int mode) {
         this.decimalMode = mode;
@@ -45,7 +47,12 @@ public class NumberFormatModeBuilder {
         return this;
     }
 
+    public NumberFormatModeBuilder setAngleUnit(int angleUnit) {
+        this.angleUnit = angleUnit;
+        return this;
+    }
+
     public NumberFormatMode build() {
-        return new NumberFormatMode(fractionThreshold, decimalAccuracy, decimalMode, complexMode, matrixEnclosures);
+        return new NumberFormatMode(fractionThreshold, decimalAccuracy, decimalMode, complexMode, matrixEnclosures, angleUnit);
     }
 }

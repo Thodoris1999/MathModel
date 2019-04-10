@@ -212,7 +212,7 @@ public class Matrix {
         GaussianElimination elimination = new GaussianElimination(this);
         Matrix rref = elimination.getReducedRowEchelon();
         List<Integer> pivotIndices = elimination.getPivotIndices();
-        if (pivotIndices.contains(rref.getColCount())) return sol;
+        if (pivotIndices.contains(rref.getColCount() - 1)) return sol;
 
         //loop through all non pivot columns
         for (int i = 0; i < rref.getColCount(); i++) {

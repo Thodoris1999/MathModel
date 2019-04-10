@@ -1,8 +1,11 @@
 package com.ttyrovou.examples;
 
 import com.ttyrovou.math.functions.Polynomial;
+import com.ttyrovou.math.matrix.Matrix;
 import com.ttyrovou.math.numbers.Complex;
 import com.ttyrovou.math.numbers.Fraction;
+
+import java.util.LinkedList;
 
 public class PolynomialExample {
     public static void main(String[] args) {
@@ -21,6 +24,13 @@ public class PolynomialExample {
 
         Complex polar = new Complex("2∠1.6");
         System.out.println(polar.getRe().toDouble());
+
+        Complex[][] noSolMatNums = {{Complex.ofInt(2), Complex.ZERO, Complex.ofInt(3), Complex.ofInt(3)},
+                {Complex.ofInt(4), Complex.ofInt(-3), Complex.ofInt(7), Complex.ofInt(5)},
+                {Complex.ofInt(8), Complex.ofInt(-9), Complex.ofInt(15), Complex.ofInt(10)}};
+        Matrix noSolMat = new Matrix(noSolMatNums);
+        LinkedList<LinkedList<Complex>> sol = noSolMat.linearSystemSolution();
+        System.out.println(sol);
 
         //TODO: use variable types for composition, sum etc
         //TODO: use correct variable names

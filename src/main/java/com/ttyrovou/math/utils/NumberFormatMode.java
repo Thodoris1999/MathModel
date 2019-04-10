@@ -12,18 +12,23 @@ public class NumberFormatMode {
     public static final int PARENTHESIS = 6;
     public static final int STRAIGHT_LINES = 7;
 
+    public static final int RADIANS = 8;
+    public static final int DEGREES = 9;
+
     private int fractionThreshold;
     private int decimalAccuracy;
     private int decimalMode;
     private int complexMode;
     private int matrixEnclosures;
+    private int angleUnit;
 
-    NumberFormatMode(int fractionThreshold, int decimalAccuracy, int decimalMode, int complexMode, int matrixEnclosures) {
+    NumberFormatMode(int fractionThreshold, int decimalAccuracy, int decimalMode, int complexMode, int matrixEnclosures, int angleUnit) {
         this.fractionThreshold = fractionThreshold;
         this.decimalAccuracy = decimalAccuracy;
         this.decimalMode = decimalMode;
         this.complexMode = complexMode;
         this.matrixEnclosures = matrixEnclosures;
+        this.angleUnit = angleUnit;
     }
 
     public int getFractionThreshold() {
@@ -44,5 +49,9 @@ public class NumberFormatMode {
 
     public int getMatrixEnclosures() {
         return matrixEnclosures;
+    }
+
+    public int getAngleUnit() {
+        return angleUnit;
     }
 }

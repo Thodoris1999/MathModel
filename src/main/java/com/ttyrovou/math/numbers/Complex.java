@@ -176,7 +176,7 @@ public class Complex {
                 if (getAngle().equals(Fraction.ZERO)) {
                     return re.toLatex(formatMode);
                 }
-                return abs().toLatex(formatMode) + "∠" + getAngle().toLatex(formatMode);
+                return abs().toLatex(formatMode) + "∠" + angleLatex(formatMode);
             default:
                 throw new IllegalArgumentException("Unknown mode " + formatMode.getComplexMode());
         }
@@ -217,6 +217,18 @@ public class Complex {
             return Fraction.ofDouble(-Math.PI / 2);
         } else {
             return Fraction.ZERO;
+        }
+    }
+
+    private String angleLatex(NumberFormatMode formatMode) {
+        Fraction angle = getAngle();
+        switch (formatMode.getAngleUnit()) {
+            case NumberFormatMode.RADIANS:
+                return angle + "㎭";
+            case NumberFormatMode.DEGREES:
+                return angle + "°";
+            default:
+                throw new IllegalArgumentException("Unknown angle unit mode " + formatMode.getAngleUnit());
         }
     }
 }
